@@ -236,10 +236,7 @@
 	<update id="delete">
 		UPDATE cms_category SET 
 			del_flag = #{DEL_FLAG_DELETE}
-		WHERE id = #{id} OR parent_ids LIKE 
-					<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
-					<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
-					<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+		WHERE id = #{id} OR parent_ids LIKE CONCAT('%,', #{id}, ',%')
 	</update>
 	
 	<select id="findByParentIdAndSiteId" resultType="Category">
@@ -265,10 +262,7 @@
 		<include refid="cmsCategoryDaoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL} 
-			AND a.parent_id LIKE 
-					<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>
-					<if test="dbName == 'mysql'">CONCAT('%', #{id}, '%')</if>
+			AND a.parent_id LIKE CONCAT('%', #{id}, '%')
 		</where>		
 		order by a.site_id, a.sort
 	</select>
@@ -291,10 +285,7 @@
 			a.del_flag = #{DEL_FLAG_NORMAL} 
 			AND a.category_id
 			AND c.site_id =
-			AND c.id = :id or c.parent_ids LIKE 
-					<if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
-					<if test="dbName == 'mysql'">CONCAT('%', #{parentIds}, '%')</if>
+			AND c.id = :id or c.parent_ids LIKE CONCAT('%', #{parentIds}, '%')
 			group by cp.sort, cp.id, c.sort, c.id
 			order by cp.sort, cp.id, c.sort, c.id
 		</where>		

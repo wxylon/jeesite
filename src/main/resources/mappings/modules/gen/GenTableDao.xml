@@ -28,16 +28,10 @@
 			AND a.name = #{name}
 		</if>
 		<if test="nameLike != null and nameLike != ''">
-			AND a.name LIKE 
-				<if test="dbName == 'oracle'">'%'||#{nameLike}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{nameLike}+'%'</if>
-				<if test="dbName == 'mysql'">concat('%',#{nameLike},'%')</if>
+			AND a.name LIKE concat('%',#{nameLike},'%')
 		</if>
 		<if test="comments != null and comments != ''">
-			AND a.comments LIKE 
-				<if test="dbName == 'oracle'">'%'||#{comments}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{comments}+'%'</if>
-				<if test="dbName == 'mysql'">concat('%',#{comments},'%')</if>
+			AND a.comments LIKE concat('%',#{comments},'%')
 		</if>
 		<if test="parentTable != null and parentTable != ''">
 			AND a.parent_table = #{parentTable}
