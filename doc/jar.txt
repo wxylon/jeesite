@@ -1,2 +1,0 @@
-## 直接下载文件 替换仓库
-https://github.com/thinkgem/repository

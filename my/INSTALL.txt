@@ -1,0 +1,17 @@
+1. 准备mysql环境
+## mysql中设置表明忽略大小写
+sudo vi /etc/mysql/my.cnf
+## mysqld下增加
+[mysqld]
+lower_case_table_names=1
+
+## 重启mysql
+sudo /etc/init.d/mysql restart
+
+
+2. 修复无法下载的依赖lib
+## 直接下载文件, 执行 \deploy-files\deploy.bat, 可将依赖包直接导入
+https://github.com/thinkgem/repository
+
+
+
