@@ -69,7 +69,7 @@ public class LoginController extends BaseController{
 			return "redirect:" + adminPath;
 		}
 //		String view;
-//		view = "/WEB-INF/views/modules/sys/sysLogin.jsp";
+//		view = "/WEB-INF/views/modules/sys/sysLogin.vm";
 //		view = "classpath:";
 //		view += "jar:file:/D:/GitHub/jeesite/src/main/webapp/WEB-INF/lib/jeesite.jar!";
 //		view += "/"+getClass().getName().replaceAll("\\.", "/").replace(getClass().getSimpleName(), "")+"view/sysLogin";

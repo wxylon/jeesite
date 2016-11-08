@@ -82,10 +82,11 @@
 		</property>
 	</bean>
 
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
 		<property name="cache" value="false"/>
 		<property name="prefix" value=""/>
 		<property name="suffix" value=".vm"/>
+		<property name="layoutUrl" value="layouts/layout.vm" />
 		<property name="contentType" value="text/html;charset=UTF-8"/>
 		<property name="exposeSpringMacroHelpers" value="true"/>
 		<property name="dateToolAttribute" value="dateTool"/>

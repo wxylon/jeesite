@@ -1,0 +1,71 @@
+#set($title="菜单导航")
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".accordion-heading a").click(function(){
+			$('.accordion-toggle i').removeClass('icon-chevron-down');
+			$('.accordion-toggle i').addClass('icon-chevron-right');
+			if(!$($(this).attr('href')).hasClass('in')){
+				$(this).children('i').removeClass('icon-chevron-right');
+				$(this).children('i').addClass('icon-chevron-down');
+			}
+		});
+		$(".accordion-body a").click(function(){
+			$("#menu-${param.parentId} li").removeClass("active");
+			$("#menu-${param.parentId} li i").removeClass("icon-white");
+			$(this).parent().addClass("active");
+			$(this).children("i").addClass("icon-white");
+			//loading('正在执行，请稍等...');
+		});
+		//$(".accordion-body a:first i").click();
+		//$(".accordion-body li:first li:first a:first i").click();
+	});
+</script>
+<div class="accordion" id="menu-${param.parentId}">
+	<c:set var="menuList" value="$userUtils.getMenuList()"/>
+	<c:set var="firstMenu" value="true"/>
+	#foreach($menu in ${menuList})
+		#if(!${param.parentId})
+			#set($temp='${param.parentId}')
+		#else
+			#set($temp='1')
+		#end
+		#if(${menu.parent.id} == $temp && ${menu.isShow} == '1')
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#menu-${param.parentId}" data-href="#collapse-${menu.id}" href="#collapse-${menu.id}" title="${menu.remarks}">
+						<i class="icon-chevron-#if(!${firstMenu})'down'#else'right'#end"></i>&nbsp;${menu.name}
+					</a>
+				</div>
+				<div id="collapse-${menu.id}" class="accordion-body collapse #if(!${firstMenu} && ${firstMenu} == 'true')'in'#end">
+					<div class="accordion-inner">
+						<ul class="nav nav-list">
+							#foreach($menu2 in ${menuList})
+								#if(${menu2.parent.id} == ${menu.id} && ${menu2.isShow} == '1')
+									<li>
+										<a data-href=".menu3-${menu2.id}"
+										   href="#if($stringUtils.indexOf(${menu2.href}, '://') == -1)${ctx}#else''#end#if(${menu2.href})${menu2.href}#else'/404'#end"
+										   target="#if(${menu2.target})${menu2.target}#else'mainFrame'#end" >
+										<i class="icon-#if(${menu2.icon})${menu2.icon}#else'circle-arrow-right'#end"></i>&nbsp;${menu2.name}</a>
+										<ul class="nav nav-list hide" style="margin:0;padding-right:0;">
+											#foreach($menu3 in ${menuList})
+												#if(${menu3.parent.id} == ${menu2.id} && ${menu3.isShow} == '1')
+													<li class="menu3-${menu2.id} hide">
+														<a href="#if($stringUtils.indexOf(${menu3.href}, '://') == -1)${ctx}#else''#end#if(${menu3.href})${menu3.href}#else'/404'#end"
+														   target="#if(${menu3.target})${menu3.target}#else'mainFrame'#end" >
+															<i class="icon-#if(${menu3.icon})${menu3.icon}#else'circle-arrow-right'#end"></i>&nbsp;${menu3.name}
+														</a>
+													</li>
+												#end
+											#end
+										</ul>
+									</li>
+									<c:set var="firstMenu" value="false"/>
+								#end
+							#end
+						</ul>
+					</div>
+				</div>
+			</div>
+		#end
+	#end
+</div>

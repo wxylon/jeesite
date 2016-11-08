@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html style="overflow-x:auto;overflow-y:auto;">
 <head>
-	#parse("/layout/web_header.vm")
+	#parse("/layouts/web_header.vm")
 </head>
 <body>
 	${screen_content}
 </body>
-	#parse("/layout/web_footer.vm")
+	#parse("/layouts/web_footer.vm")
 </html>

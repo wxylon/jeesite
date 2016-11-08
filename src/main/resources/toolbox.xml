@@ -15,4 +15,9 @@
         <scope>request</scope>
         <class>com.thinkgem.jeesite.modules.sys.utils.UserUtils</class>
     </tool>
+    <tool>
+        <key>stringUtils</key>
+        <scope>request</scope>
+        <class>org.apache.commons.lang3.StringUtils</class>
+    </tool>
 </toolbox>
