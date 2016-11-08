@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>${fns:getConfig('productName')} 登录</title>
+	<title>$global.getConfig('productName') 登录</title>
 	<meta name="decorator" content="blank"/>
 	<style type="text/css">
       html,body,table{background-color:#3E75C0;width:100%;text-align:center;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
@@ -78,7 +78,7 @@
 		</div>
 	</form>
 	<div class="footer">
-		Copyright &copy; 2012-${fns:getConfig('copyrightYear')} <a href="${pageContext.request.contextPath}${fns:getFrontPath()}">${fns:getConfig('productName')}</a> - Powered By <a href="http://jeesite.com" target="_blank">JeeSite</a> ${fns:getConfig('version')}
+		Copyright &copy; 2012-$global.getConfig('version') <a href="${pageContext.request.contextPath}${fns:getFrontPath()}">$global.getConfig('productName')</a> - Powered By <a href="http://jeesite.com" target="_blank">JeeSite</a> $global.getConfig('version')
 	</div>
 	<script src="${ctxStatic}/flash/zoom.min.js" type="text/javascript"></script>
 </body>

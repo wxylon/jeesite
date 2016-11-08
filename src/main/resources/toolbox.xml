@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <tool>
+        <key>global</key>
+        <scope>request</scope>
+        <class>com.thinkgem.jeesite.common.config.Global</class>
+    </tool>
+    <tool>
+        <key>dictUtils</key>
+        <scope>request</scope>
+        <class>com.thinkgem.jeesite.modules.sys.utils.DictUtils</class>
+    </tool>
+    <tool>
+        <key>userUtils</key>
+        <scope>request</scope>
+        <class>com.thinkgem.jeesite.modules.sys.utils.UserUtils</class>
+    </tool>
+</toolbox>
