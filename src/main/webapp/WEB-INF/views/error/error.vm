@@ -1,0 +1,6 @@
+#set($title="提示信息！")
+<div class="main">
+   <div style="width:100%; min-height:100px; overflow: auto; margin:0px auto;TEXT-ALIGN: center;">
+		#if($ex) $!ex.message #end
+   </div>
+</div>

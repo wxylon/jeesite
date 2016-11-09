@@ -168,15 +168,15 @@ public abstract class BaseController {
 	 * 参数绑定异常
 	 */
 	@ExceptionHandler({BindException.class, ConstraintViolationException.class, ValidationException.class})
-    public String bindException() {  
+    public String bindException() {
         return "error/400";
     }
-	
+
 	/**
 	 * 授权登录异常
 	 */
 	@ExceptionHandler({AuthenticationException.class})
-    public String authenticationException() {  
+    public String authenticationException() {
         return "error/403";
     }
 	

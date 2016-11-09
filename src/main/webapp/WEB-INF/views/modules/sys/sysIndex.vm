@@ -5,7 +5,7 @@
 #else
 	#set($tabmode='1')
 #end
-#if($tabmode == '1')
+#if($tabmode == '0')
 	<link rel="Stylesheet" href="${ctxStatic}/jerichotab/css/jquery.jerichotab.css" />
 	<script type="text/javascript" src="${ctxStatic}/jerichotab/js/jquery.jerichotab.js"></script>
 #end
