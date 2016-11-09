@@ -1,10 +1,1 @@
-<!DOCTYPE html>
-<html style="overflow-x:auto;overflow-y:auto;">
-<head>
-	#parse("/layouts/web_header.vm")
-</head>
-<body>
-	${screen_content}
-</body>
-	#parse("/layouts/web_footer.vm")
-</html>
+${screen_content}

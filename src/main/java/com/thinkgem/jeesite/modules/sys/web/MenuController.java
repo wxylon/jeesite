@@ -6,12 +6,14 @@ package com.thinkgem.jeesite.modules.sys.web;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -115,7 +117,8 @@ public class MenuController extends BaseController {
 
 	@RequiresPermissions("user")
 	@RequestMapping(value = "tree")
-	public String tree() {
+	public String tree(String parentId, ModelMap model) {
+		model.put("parentId", parentId);
 		return "modules/sys/menuTree";
 	}
 

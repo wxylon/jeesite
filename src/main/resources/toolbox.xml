@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toolbox>
+    <!--<tool>-->
+        <!--<key>param</key>-->
+        <!--<scope>request</scope>-->
+        <!--<class>org.apache.velocity.tools.view.ParameterTool</class>-->
+    <!--</tool>-->
     <tool>
         <key>global</key>
         <scope>request</scope>
