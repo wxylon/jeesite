@@ -22,13 +22,13 @@
 	<li class="active"><a href="${ctx}/sys/user/info">个人信息</a></li>
 	<li><a href="${ctx}/sys/user/modifyPwd">修改密码</a></li>
 </ul><br/>
-<form:form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/info" method="post" class="form-horizontal">
-	<sys:message content="${message}"/>
+<form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/info" method="post" class="form-horizontal">
+	#sysMessage(${message})
 	<div class="control-group">
 		<label class="control-label">头像:</label>
 		<div class="controls">
 			<form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-			<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/>
+			#sysCkFinder('nameImage', 'images', '/photo', false, false, "100", "100")
 		</div>
 	</div>
 	<div class="control-group">
@@ -94,4 +94,4 @@
 	<div class="form-actions">
 		<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>
 	</div>
-</form:form>
+</form>
