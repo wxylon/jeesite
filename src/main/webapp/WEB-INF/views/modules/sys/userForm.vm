@@ -1,0 +1,175 @@
+#set($title='用户管理')
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#no").focus();
+		$("#inputForm").validate({
+			rules: {
+				loginName: {remote: "${ctx}/sys/user/checkLoginName?oldLoginName=" + encodeURIComponent('$!{user.loginName}')}
+			},
+			messages: {
+				loginName: {remote: "用户登录名已存在"},
+				confirmNewPassword: {equalTo: "输入与上面相同的密码"}
+			},
+			submitHandler: function(form){
+				loading('正在提交，请稍等...');
+				form.submit();
+			},
+			errorContainer: "#messageBox",
+			errorPlacement: function(error, element) {
+				$("#messageBox").text("输入有误，请先更正。");
+				if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+					error.appendTo(element.parent().parent());
+				} else {
+					error.insertAfter(element);
+				}
+			}
+		});
+	});
+</script>
+<ul class="nav nav-tabs">
+	<li><a href="${ctx}/sys/user/list">用户列表</a></li>
+	<li class="active"><a href="${ctx}/sys/user/form?id=${user.id}">用户<shiro:hasPermission name="sys:user:edit">#if(!${user.id}) 修改 #else 添加 #end</shiro:hasPermission><shiro:lacksPermission name="sys:user:edit">查看</shiro:lacksPermission></a></li>
+</ul><br/>
+<form id="inputForm" class="form-horizontal" action="${ctx}/sys/user/save" method="post">
+	<input id="id" name="id" type="hidden" value="$!{user.id}"/>
+	#sysMessage($!{message})
+	<div class="control-group">
+		<label class="control-label">头像:</label>
+		<div class="controls">
+            <input id="nameImage" name="photo" maxlength="255" class="input-xlarge" type="hidden" value="$!{user.photo}"/>
+			#sysCkFinder('nameImage', 'images', '/photo', false, false, "100", "100")
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">归属公司:</label>
+		<div class="controls">
+			#sysTreeSelect('company', 'company.id',$!{user.company.id}, 'company.name', $!{user.company.name}, '公司', '/sys/office/treeData?type=1', false, '', false, false, false, '', false, true, false, '', '', false, false, false, '')
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">归属部门:</label>
+		<div class="controls">
+			#sysTreeSelect('office', 'office.id',$!{user.office.id}, 'office.name', $!{user.office.name}, '部门', '/sys/office/treeData?type=2', false, '', false, false, true, '', false, true, false, 'input-small', '', false, false, false, '')
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">工号:</label>
+		<div class="controls">
+            <input id="no" name="no" class="required" type="text" value="$!{user.no}" maxlength="50"/>
+			<span class="help-inline"><font color="red">*</font> </span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">姓名:</label>
+		<div class="controls">
+            <input id="name" name="name" class="required" type="text" value="$!{user.name}" maxlength="50"/>
+			<span class="help-inline"><font color="red">*</font> </span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">登录名:</label>
+		<div class="controls">
+			<input id="oldLoginName" name="oldLoginName" type="hidden" value="$!{user.loginName}">
+            <input id="loginName" name="loginName" class="required userName" type="text" value="$!{user.loginName}" maxlength="50"/>
+			<span class="help-inline"><font color="red">*</font> </span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">密码:</label>
+		<div class="controls">
+			<input id="newPassword" name="newPassword" type="password" value="$!{user.newPassword}" maxlength="50" minlength="3" #if($!{user.id}) class=""#else class="required"#end/>
+			#if(!${user.id})
+                <span class="help-inline">若不修改密码，请留空。</span>
+			#else
+                <span class="help-inline"><font color="red">*</font> </span>
+			#end
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">确认密码:</label>
+		<div class="controls">
+			<input id="confirmNewPassword" name="confirmNewPassword" type="password" value="$!{user.confirmNewPassword}" maxlength="50" minlength="3" equalTo="#newPassword"/>
+			#if(!${user.id})
+			#else
+                <span class="help-inline"><font color="red">*</font> </span>
+			#end
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">邮箱:</label>
+		<div class="controls">
+            <input id="email" name="email" class="email" type="text" value="$!{user.email}" maxlength="100"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">电话:</label>
+		<div class="controls">
+            <input id="phone" name="phone" type="text" value="$!{user.phone}" maxlength="100"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">手机:</label>
+		<div class="controls">
+            <input id="mobile" name="mobile" type="text" value="$!{user.mobile}" maxlength="100"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">是否允许登录:</label>
+		<div class="controls">
+            <select id="loginFlag" name="loginFlag">
+				#foreach($dict in $dictUtils.getDictList('yes_no'))
+                    <option value="${dict.value}">${dict.label}</option>
+				#end
+            </select>
+			<span class="help-inline"><font color="red">*</font> “是”代表此账号允许登录，“否”则表示此账号不允许登录</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">用户类型:</label>
+		<div class="controls">
+            <select id="userType" name="userType" class="input-xlarge">
+                <option value="" selected="selected">请选择</option>
+				#foreach($dict in $dictUtils.getDictList('sys_user_type'))
+                    <option value="${dict.value}">${dict.label}</option>
+				#end
+            </select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">用户角色:</label>
+		<div class="controls">
+			#foreach($dict in $allRoles)
+                <span>
+					<input id="roleIdList$velocityCount" name="roleIdList" class="required" type="checkbox" value="${dict.id}"/>
+					<label for="roleIdList$velocityCount">${dict.name}</label>
+				</span>
+			#end
+			<input type="hidden" name="_roleIdList" value="on"/>
+			<span class="help-inline"><font color="red">*</font> </span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">备注:</label>
+		<div class="controls">
+            <textarea id="remarks" name="remarks" maxlength="200" class="input-xlarge" rows="3">$!{user.remarks}</textarea>
+		</div>
+	</div>
+	#if($!{user.id})
+		<div class="control-group">
+			<label class="control-label">创建时间:</label>
+			<div class="controls">
+				<label class="lbl">$!dateUtils.formatDateTime($!{user.createDate})</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">最后登陆:</label>
+			<div class="controls">
+				<label class="lbl">IP: $!{user.loginIp}&nbsp;&nbsp;&nbsp;&nbsp;时间：$!dateUtils.formatDateTime($!{user.loginDate})</label>
+			</div>
+		</div>
+	#end
+	<div class="form-actions">
+		<shiro:hasPermission name="sys:user:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+		<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+	</div>
+</form>
