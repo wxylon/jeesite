@@ -6,6 +6,11 @@
         <!--<class>org.apache.velocity.tools.view.ParameterTool</class>-->
     <!--</tool>-->
     <tool>
+        <key>shiro</key>
+        <scope>application</scope>
+        <class>org.apache.shiro.web.support.velocity.Permission</class>
+    </tool>
+    <tool>
         <key>global</key>
         <scope>request</scope>
         <class>com.thinkgem.jeesite.common.config.Global</class>

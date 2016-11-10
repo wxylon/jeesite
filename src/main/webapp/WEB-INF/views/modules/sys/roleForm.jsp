@@ -103,7 +103,7 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="role" action="${ctx}/sys/role/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>
+		#sysMessage($!{message})
 		<div class="control-group">
 			<label class="control-label">归属机构:</label>
 			<div class="controls">

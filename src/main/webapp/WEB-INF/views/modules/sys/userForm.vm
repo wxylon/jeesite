@@ -28,7 +28,7 @@
 </script>
 <ul class="nav nav-tabs">
 	<li><a href="${ctx}/sys/user/list">用户列表</a></li>
-	<li class="active"><a href="${ctx}/sys/user/form?id=${user.id}">用户<shiro:hasPermission name="sys:user:edit">#if(!${user.id}) 修改 #else 添加 #end</shiro:hasPermission><shiro:lacksPermission name="sys:user:edit">查看</shiro:lacksPermission></a></li>
+	<li class="active"><a href="${ctx}/sys/user/form?id=${user.id}">#if($shiro.hasPermission('sys:user:edit'))#if($!{user.id})用户修改#else用户添加#end #end #if($shiro.lacksPermission('sys:user:edit')) 查看 #end</a></li>
 </ul><br/>
 <form id="inputForm" class="form-horizontal" action="${ctx}/sys/user/save" method="post">
 	<input id="id" name="id" type="hidden" value="$!{user.id}"/>
@@ -169,7 +169,7 @@
 		</div>
 	#end
 	<div class="form-actions">
-		<shiro:hasPermission name="sys:user:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+		#if($shiro.lacksPermission('sys:user:edit'))<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;#end
 		<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 	</div>
 </form>

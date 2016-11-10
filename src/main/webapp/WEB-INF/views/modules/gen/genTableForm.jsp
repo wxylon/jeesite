@@ -39,7 +39,7 @@
 		<c:when test="${empty genTable.name}">
 			<form:form id="inputForm" modelAttribute="genTable" action="${ctx}/gen/genTable/form" method="post" class="form-horizontal">
 				<form:hidden path="id"/>
-				<sys:message content="${message}"/>
+				#sysMessage($!{message})
 				<br/>
 				<div class="control-group">
 					<label class="control-label">表名:</label>
@@ -58,7 +58,7 @@
 		<c:otherwise>
 			<form:form id="inputForm" modelAttribute="genTable" action="${ctx}/gen/genTable/save" method="post" class="form-horizontal">
 				<form:hidden path="id"/>
-				<sys:message content="${message}"/>
+				#sysMessage($!{message})
 				<fieldset>
 					<legend>基本信息</legend>
 					<div class="control-group">

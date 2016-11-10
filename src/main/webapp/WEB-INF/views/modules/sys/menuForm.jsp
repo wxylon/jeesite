@@ -32,7 +32,7 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="menu" action="${ctx}/sys/menu/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>
+		#sysMessage($!{message})
 		<div class="control-group">
 			<label class="control-label">上级菜单:</label>
 			<div class="controls">

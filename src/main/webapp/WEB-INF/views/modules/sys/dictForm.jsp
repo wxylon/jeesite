@@ -32,7 +32,7 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="dict" action="${ctx}/sys/dict/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>
+		#sysMessage($!{message})
 		<div class="control-group">
 			<label class="control-label">键值:</label>
 			<div class="controls">

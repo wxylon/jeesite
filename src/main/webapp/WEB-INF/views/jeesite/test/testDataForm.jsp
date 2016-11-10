@@ -32,7 +32,7 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="testData" action="${ctx}/test/testData/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
+		#sysMessage($!{message})
 		<div class="control-group">
 			<label class="control-label">归属用户：</label>
 			<div class="controls">
