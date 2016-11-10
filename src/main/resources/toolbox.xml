@@ -31,8 +31,20 @@
         <class>org.apache.commons.lang3.StringUtils</class>
     </tool>
     <tool>
+        <key>jeeSiteUtils</key>
+        <scope>request</scope>
+        <class>com.thinkgem.jeesite.common.utils.StringUtils</class>
+    </tool>
+    <tool>
         <key>dateUtils</key>
         <scope>request</scope>
         <class>com.thinkgem.jeesite.common.utils.DateUtils</class>
     </tool>
+    <tool>
+        <key>jsonMapper</key>
+        <scope>request</scope>
+        <class>com.thinkgem.jeesite.common.mapper.JsonMapper</class>
+    </tool>
+
+
 </toolbox>
