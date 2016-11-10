@@ -25,4 +25,9 @@
         <scope>request</scope>
         <class>org.apache.commons.lang3.StringUtils</class>
     </tool>
+    <tool>
+        <key>dateUtils</key>
+        <scope>request</scope>
+        <class>com.thinkgem.jeesite.common.utils.DateUtils</class>
+    </tool>
 </toolbox>

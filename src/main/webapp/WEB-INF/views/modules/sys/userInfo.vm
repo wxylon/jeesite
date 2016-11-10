@@ -22,12 +22,12 @@
 	<li class="active"><a href="${ctx}/sys/user/info">个人信息</a></li>
 	<li><a href="${ctx}/sys/user/modifyPwd">修改密码</a></li>
 </ul><br/>
-<form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/info" method="post" class="form-horizontal">
-	#sysMessage(${message})
+<form id="inputForm" class="form-horizontal" action="${ctx}/sys/user/info" method="post">
+	#sysMessage($!{message})
 	<div class="control-group">
 		<label class="control-label">头像:</label>
 		<div class="controls">
-			<form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+            <input id="nameImage" name="photo" maxlength="255" class="input-xlarge" type="hidden" value="$!{user.photo}"/>
 			#sysCkFinder('nameImage', 'images', '/photo', false, false, "100", "100")
 		</div>
 	</div>
@@ -46,31 +46,31 @@
 	<div class="control-group">
 		<label class="control-label">姓名:</label>
 		<div class="controls">
-			<form:input path="name" htmlEscape="false" maxlength="50" class="required" readonly="true"/>
+            <input id="name" name="name" class="required" readonly="readonly" type="text" value="$!{user.name}" maxlength="50"/>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">邮箱:</label>
 		<div class="controls">
-			<form:input path="email" htmlEscape="false" maxlength="50" class="email"/>
+            <input id="email" name="email" class="email" type="text" value="$!{user.email}" maxlength="50"/>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">电话:</label>
 		<div class="controls">
-			<form:input path="phone" htmlEscape="false" maxlength="50"/>
+            <input id="phone" name="phone" type="text" value="$!{user.phone}" maxlength="50"/>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">手机:</label>
 		<div class="controls">
-			<form:input path="mobile" htmlEscape="false" maxlength="50"/>
+            <input id="mobile" name="mobile" type="text" value="$!{user.mobile}" maxlength="50"/>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">备注:</label>
 		<div class="controls">
-			<form:textarea path="remarks" htmlEscape="false" rows="3" maxlength="200" class="input-xlarge"/>
+            <textarea id="remarks" name="remarks" maxlength="200" class="input-xlarge" rows="3">$!{user.remarks}</textarea>
 		</div>
 	</div>
 	<div class="control-group">
@@ -88,7 +88,7 @@
 	<div class="control-group">
 		<label class="control-label">上次登录:</label>
 		<div class="controls">
-			<label class="lbl">IP: ${user.oldLoginIp}&nbsp;&nbsp;&nbsp;&nbsp;时间：<fmt:formatDate value="${user.oldLoginDate}" type="both" dateStyle="full"/></label>
+			<label class="lbl">IP: ${user.oldLoginIp}&nbsp;&nbsp;&nbsp;&nbsp;时间：$dateUtils.formatDateTime($!{user.oldLoginDate})</label>
 		</div>
 	</div>
 	<div class="form-actions">

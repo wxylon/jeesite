@@ -6,6 +6,7 @@ package com.thinkgem.jeesite.common.utils;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.commons.lang3.*;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
@@ -168,6 +169,14 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		long beforeTime = before.getTime();
 		long afterTime = after.getTime();
 		return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
+	}
+
+	public static String formatDateTime(String date){
+		if(org.apache.commons.lang3.StringUtils.isEmpty(date)){
+			return "";
+		} else {
+			return formatDateTime(parseDate(date));
+		}
 	}
 	
 	/**
