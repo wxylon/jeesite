@@ -81,14 +81,10 @@
         }
         function ${input}SelectAction(fileUrl, data, allFiles){
             var url="", files=ckfinderAPI.getSelectedFiles();
-            for(var i=0; i<files.length; i++){//<c:if test="${type eq 'thumb'}">
-                url += files[i].getThumbnailUrl();//</c:if><c:if test="${type ne 'thumb'}">
-                url += files[i].getUrl();//</c:if>
+            for(var i=0; i<files.length; i++){
                 if (i<files.length-1) url+="|";
-            }//<c:if test="${selectMultiple}">
-            $("#${input}").val($("#${input}").val()+($("#${input}").val(url)==""?url:"|"+url));//</c:if><c:if test="${!selectMultiple}">
-            $("#${input}").val(url);//</c:if>
-                ${input}Preview();
+            }
+            ${input}Preview();
             //top.$.jBox.close();
         }
         function ${input}ThumbSelectAction(fileUrl, data, allFiles){
