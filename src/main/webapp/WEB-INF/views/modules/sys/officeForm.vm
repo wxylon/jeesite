@@ -1,0 +1,164 @@
+#set($title='机构管理')
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#name").focus();
+		$("#inputForm").validate({
+			submitHandler: function(form){
+				loading('正在提交，请稍等...');
+				form.submit();
+			},
+			errorContainer: "#messageBox",
+			errorPlacement: function(error, element) {
+				$("#messageBox").text("输入有误，请先更正。");
+				if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+					error.appendTo(element.parent().parent());
+				} else {
+					error.insertAfter(element);
+				}
+			}
+		});
+	});
+</script>
+
+<ul class="nav nav-tabs">
+	<li><a href="${ctx}/sys/office/list?id=$!{office.parent.id}&parentIds=$!{office.parentIds}">机构列表</a></li>
+	<li class="active">
+		<a href="${ctx}/sys/office/form?id=$!{office.id}&parent.id=$!{office.parent.id}">
+			#if($shiro.hasPermission('sys:office:edit'))#if($!{office.id})机构修改#else机构添加#end #end
+			#if($shiro.lacksPermission('sys:office:edit')) 查看 #end
+		</a>
+	</li>
+</ul><br/>
+<form id="inputForm" modelAttribute="office" action="${ctx}/sys/office/save" method="post" class="form-horizontal">
+    <input id="id" name="id" type="hidden" value="$!{office.id}"/>
+	#sysMessage($!{message})
+	<div class="control-group">
+		<label class="control-label">上级机构:</label>
+		<div class="controls">
+			#sysTreeSelect('office', 'parent.id',$!{office.parent.id}, 'parent.name', $!{office.parent.name}, '机构', '/sys/office/treeData', false, $!{office.id}, false, false, false, '', false, ${office.currentUser.admin}, false, '', '', false, false, false, '')
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">归属区域:</label>
+		<div class="controls">
+			#sysTreeSelect('area', 'area.id',$!{office.area.id}, 'area.name', $!{office.area.name}, '区域', '/sys/area/treeData', false, '', false, false, false, '', false, true, false, 'required', '', false, false, false, '')
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">机构名称:</label>
+		<div class="controls">
+            <input id="name" name="name" class="required" type="text" value="$!{office.name}" maxlength="50"/>
+			<span class="help-inline"><font color="red">*</font> </span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">机构编码:</label>
+		<div class="controls">
+            <input id="code" name="code" type="text" value="$!{office.code}" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">机构类型:</label>
+		<div class="controls">
+            <select id="type" name="type" class="input-medium">
+				#foreach($dict in $dictUtils.getDictList('sys_office_type'))
+                    <option value="${dict.value}">${dict.label}</option>
+				#end
+            </select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">机构级别:</label>
+		<div class="controls">
+            <select id="grade" name="grade" class="input-medium">
+				#foreach($dict in $dictUtils.getDictList('sys_office_grade'))
+                    <option value="${dict.value}">${dict.label}</option>
+				#end
+            </select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">是否可用:</label>
+		<div class="controls">
+            <select id="useable" name="useable">
+				#foreach($dict in $dictUtils.getDictList('yes_no'))
+                    <option value="${dict.value}">${dict.label}</option>
+				#end
+            </select>
+			<span class="help-inline">“是”代表此账号允许登陆，“否”则表示此账号不允许登陆</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">主负责人:</label>
+		<div class="controls">
+			#sysTreeSelect('primaryPerson', 'primaryPerson.id',$!{office.primaryPerson.id}, 'office.primaryPerson.name', $!{office.primaryPerson.name}, '用户', '/sys/office/treeData?type=3', false, '', false, false, true, '', false, true, false, '', '', false, false, false, '')
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">副负责人:</label>
+		<div class="controls">
+			#sysTreeSelect('deputyPerson', 'deputyPerson.id',$!{office.deputyPerson.id}, 'office.deputyPerson.name', $!{office.deputyPerson.name}, '用户', '/sys/office/treeData?type=3', false, '', false, false, true, '', false, true, false, '', '', false, false, false, '')
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">联系地址:</label>
+		<div class="controls">
+            <input id="address" name="address" type="text" value="$!{office.address}" maxlength="50"/>
+            <form:input path="address" htmlEscape="false" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">邮政编码:</label>
+		<div class="controls">
+            <input id="zipCode" name="zipCode" type="text" value="$!{office.zipCode}" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">负责人:</label>
+		<div class="controls">
+            <input id="master" name="master" type="text" value="$!{office.master}" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">电话:</label>
+		<div class="controls">
+            <input id="phone" name="phone" type="text" value="$!{office.phone}" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">传真:</label>
+		<div class="controls">
+            <input id="fax" name="fax" type="text" value="$!{office.fax}" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">邮箱:</label>
+		<div class="controls">
+            <input id="email" name="email" type="text" value="$!{office.email}" maxlength="50"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">备注:</label>
+		<div class="controls">
+            <textarea id="remarks" name="remarks" maxlength="200" class="input-xlarge" rows="3">$!{office.remarks}</textarea>
+		</div>
+	</div>
+	#if($!{office.id})
+		<div class="control-group">
+			<label class="control-label">快速添加下级部门:</label>
+			<div class="controls">
+				#foreach($dict in $dictUtils.getDictList('sys_office_common'))
+					<span>
+						<input id="childDeptList$velocityCount" name="childDeptList" class="required" type="checkbox" value="${dict.id}"/>
+						<label for="childDeptList$velocityCount">${dict.name}</label>
+					</span>
+				#end
+                <input type="hidden" name="_childDeptList" value="on"/>
+			</div>
+		</div>
+	#end
+	<div class="form-actions">
+	#if($shiro.hasPermission('sys:office:edit'))<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;#end
+		<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+	</div>
+</form>

@@ -3,15 +3,14 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		var tpl = $("#treeTableTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
-		var data = $jsonMapper.toJsonString(list), #if($!{office.id}) rootId = "${office.id}" #else rootId = "0" #end;
+		var data = $jsonMapper.toJsonString(${list}), #if(! ${office.id}) rootId="${office.id}" #else rootId="0" #end;
 		addRow("#treeTableList", tpl, data, rootId, true);
 		$("#treeTable").treeTable({expandLevel : 5});
 	});
 	function addRow(list, tpl, data, pid, root){
 		for (var i=0; i<data.length; i++){
 			var row = data[i];
-
-			if (($jeeSiteUtils.jsGetVal('row.parentId')) == pid){
+            if ($jeeSiteUtils.jsGetVal('row.parentId') == pid){
 				$(list).append(Mustache.render(tpl, {
 					dict: {
 						type: getDictLabel($jsonMapper.toJsonString($dictUtils.getDictList('sys_office_type')), row.type)
@@ -23,9 +22,9 @@
 	}
 </script>
 <ul class="nav nav-tabs">
-	<li class="active"><a href="${ctx}/sys/office/list?id=${office.id}&parentIds=${office.parentIds}">机构列表</a></li>
+	<li class="active"><a href="${ctx}/sys/office/list?id=$!{office.id}&parentIds=$!{office.parentIds}">机构列表</a></li>
 	#if($shiro.hasPermission('sys:office:edit'))
-        <li><a href="${ctx}/sys/office/form?parent.id=${office.id}">机构添加</a></li>
+        <li><a href="${ctx}/sys/office/form?parent.id=$!{office.id}">机构添加</a></li>
 	#end
 </ul>
 #sysMessage($!{message})

@@ -28,7 +28,12 @@
 </script>
 <ul class="nav nav-tabs">
 	<li><a href="${ctx}/sys/user/list">用户列表</a></li>
-	<li class="active"><a href="${ctx}/sys/user/form?id=${user.id}">#if($shiro.hasPermission('sys:user:edit'))#if($!{user.id})用户修改#else用户添加#end #end #if($shiro.lacksPermission('sys:user:edit')) 查看 #end</a></li>
+	<li class="active">
+		<a href="${ctx}/sys/user/form?id=${user.id}">
+			#if($shiro.hasPermission('sys:user:edit'))#if($!{user.id})用户修改#else用户添加#end #end
+			#if($shiro.lacksPermission('sys:user:edit')) 查看 #end
+		</a>
+	</li>
 </ul><br/>
 <form id="inputForm" class="form-horizontal" action="${ctx}/sys/user/save" method="post">
 	<input id="id" name="id" type="hidden" value="$!{user.id}"/>

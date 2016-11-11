@@ -12,6 +12,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,8 +60,8 @@ public class OfficeController extends BaseController {
 
 	@RequiresPermissions("sys:office:view")
 	@RequestMapping(value = {"list"})
-	public String list(Office office, Model model) {
-        model.addAttribute("list", officeService.findList(office));
+	public String list(Office office, ModelMap model) {
+		model.put("list", officeService.findList(office));
 		return "modules/sys/officeList";
 	}
 	
