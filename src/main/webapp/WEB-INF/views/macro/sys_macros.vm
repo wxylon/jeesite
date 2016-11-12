@@ -1,0 +1,253 @@
+##name="content" type="java.lang.String" required="true" description="消息内容"
+##name="type" type="java.lang.String" description="消息类型：info、success、warning、error、loading"
+
+#macro (sysMessage $content $type)
+    <script type="text/javascript">top.$.jBox.closeTip();</script>
+    #if($!{content})
+        #if(!${type})
+            #set($ctype=${type})
+        #else
+            #if($stringUtils.indexOf($content,'失败') > 2)
+                #set($ctype='success')
+            #else
+                #set($ctype='error')
+            #end
+        #end
+        <div id="messageBox" class="alert alert-${ctype} hide"><button data-dismiss="alert" class="close">×</button>${content}</div>
+        <script type="text/javascript">
+            if(!top.$.jBox.tip.mess){
+                top.$.jBox.tip.mess=1;
+                top.$.jBox.tip("${content}","${ctype}",{persistent:true,opacity:0});
+                $("#messageBox").show();
+            }
+        </script>
+     #end
+#end
+
+##name="replace" type="java.lang.String" required="true" description="需要替换的textarea编号"
+##name="uploadPath" type="java.lang.String" required="false" description="文件上传路径，路径后自动添加年份。若不指定，则编辑器不可上传文件"
+##name="height" type="java.lang.String" required="false" description="编辑器高度"
+
+#macro (sysCkeditor $replace $uploadPath $height)
+    <script type="text/javascript">include('ckeditor_lib','${ctxStatic}/ckeditor/',['ckeditor.js']);</script>
+    <script type="text/javascript">
+        var ${replace}Ckeditor = CKEDITOR.replace("${replace}");
+            ${replace}Ckeditor.config.height = "${height}";// #if(!${uploadPath})
+            ${replace}Ckeditor.config.ckfinderPath="${ctxStatic}/ckfinder";
+        var date = new Date(), year = date.getFullYear(), month = (date.getMonth()+1)>9?date.getMonth()+1:"0"+(date.getMonth()+1);
+            ${replace}Ckeditor.config.ckfinderUploadPath="${uploadPath}/"+year+"/"+month+"/";//#end
+    </script>
+#end
+
+
+
+##name="input" type="java.lang.String" required="true" description="输入框"
+##name="type" type="java.lang.String" required="true" description="files、images、flash、thumb"
+##name="uploadPath" type="java.lang.String" required="true" description="打开文件管理的上传路径"
+##name="selectMultiple" type="java.lang.Boolean" required="false" description="是否允许多选"
+##name="readonly" type="java.lang.Boolean" required="false" description="是否查看模式"
+##name="maxWidth" type="java.lang.String" required="false" description="最大宽度"
+##name="maxHeight" type="java.lang.String" required="false" description="最大高度"
+##<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/>
+
+#macro (sysCkFinder $input $type $uploadPath $selectMultiple $readonly $maxWidth $maxHeight)
+    <ol id="${input}Preview"></ol>
+    #if(!$readonly)
+        <a href="javascript:" onclick="${input}FinderOpen();" class="btn">#if($selectMultiple)'添加'#else'选择'#end</a>&nbsp;
+        <a href="javascript:" onclick="${input}DelAll();" class="btn">清除</a>
+    #end
+    <script type="text/javascript">
+        function ${input}FinderOpen(){
+            #if(${type} == 'thumb')
+                #set($ctype='images')
+            #else
+                #set($ctype=${type})
+            #end
+            var date = new Date(), year = date.getFullYear(), month = (date.getMonth()+1)>9?date.getMonth()+1:"0"+(date.getMonth()+1);
+            var url = "${ctxStatic}/ckfinder/ckfinder.html?type=${ctype}&start=${ctype}:${uploadPath}/"+year+"/"+month+
+                    "/&action=js&func=${input}SelectAction&thumbFunc=${input}ThumbSelectAction&cb=${input}Callback";
+            #if($type == 'thumb')
+                url += "&dts=1";
+            #else
+                url += "&dts=0";
+            #end
+            #if($selectMultiple)
+                url += "&sm=1";
+            #else
+                url += "&sm=0";
+            #end
+            windowOpen(url,"文件管理",1000,700);
+            //top.$.jBox("iframe:"+url+"&pwMf=1", {title: "文件管理", width: 1000, height: 500, buttons:{'关闭': true}});
+        }
+        function ${input}SelectAction(fileUrl, data, allFiles){
+            var url="", files=ckfinderAPI.getSelectedFiles();
+            for(var i=0; i<files.length; i++){
+                if (i<files.length-1) url+="|";
+            }
+            ${input}Preview();
+            //top.$.jBox.close();
+        }
+        function ${input}ThumbSelectAction(fileUrl, data, allFiles){
+            var url="", files=ckfinderAPI.getSelectedFiles();
+            for(var i=0; i<files.length; i++){
+                url += files[i].getThumbnailUrl();
+                if (i<files.length-1) url+="|";
+            }
+            ${input}Preview();
+        }
+        function ${input}Callback(api){
+            ckfinderAPI = api;
+        }
+        function ${input}Del(obj){
+            var url = $(obj).prev().attr("url");
+            $("#${input}").val($("#${input}").val().replace("|"+url,"","").replace(url+"|","","").replace(url,"",""));
+                ${input}Preview();
+        }
+        function ${input}DelAll(){
+            $("#${input}").val("");
+                ${input}Preview();
+        }
+        function ${input}Preview(){
+            var li, urls = $("#${input}").val().split("|");
+            $("#${input}Preview").children().remove();
+            for (var i=0; i<urls.length; i++){
+                if (urls[i]!=""){
+                    li += "&nbsp;&nbsp;#if(!$readonly)<a href=\"javascript:\" onclick=\"${input}Del(this);\">×</a>#end</li>";
+                    $("#${input}Preview").append(li);
+                }
+            }
+            if ($("#${input}Preview").text() == ""){
+                $("#${input}Preview").html("<li style='list-style:none;padding-top:5px;'>无</li>");
+            }
+        }
+        ${input}Preview();
+    </script>
+#end
+
+
+##name="id" type="java.lang.String" required="true" description="编号"
+##name="name" type="java.lang.String" required="true" description="隐藏域名称（ID）"
+##name="value" type="java.lang.String" required="true" description="隐藏域值（ID）"
+##name="labelName" type="java.lang.String" required="true" description="输入框名称（Name）"
+##name="labelValue" type="java.lang.String" required="true" description="输入框值（Name）"
+##name="title" type="java.lang.String" required="true" description="选择框标题"
+##name="url" type="java.lang.String" required="true" description="树结构数据地址"
+##name="checked" type="java.lang.Boolean" required="false" description="是否显示复选框，如果不需要返回父节点，请设置notAllowSelectParent为true"
+##name="extId" type="java.lang.String" required="false" description="排除掉的编号（不能选择的编号）"
+##name="isAll" type="java.lang.Boolean" required="false" description="是否列出全部数据，设置true则不进行数据权限过滤（目前仅对Office有效）"
+##name="notAllowSelectRoot" type="java.lang.Boolean" required="false" description="不允许选择根节点"
+##name="notAllowSelectParent" type="java.lang.Boolean" required="false" description="不允许选择父节点"
+##name="module" type="java.lang.String" required="false" description="过滤栏目模型（只显示指定模型，仅针对CMS的Category树）"
+##name="selectScopeModule" type="java.lang.Boolean" required="false" description="选择范围内的模型（控制不能选择公共模型，不能选择本栏目外的模型）（仅针对CMS的Category树）"
+##name="allowClear" type="java.lang.Boolean" required="false" description="是否允许清除"
+##name="allowInput" type="java.lang.Boolean" required="false" description="文本框可填写"
+##name="cssClass" type="java.lang.String" required="false" description="css样式"
+##name="cssStyle" type="java.lang.String" required="false" description="css样式"
+##name="smallBtn" type="java.lang.Boolean" required="false" description="缩小按钮显示"
+##name="hideBtn" type="java.lang.Boolean" required="false" description="是否显示按钮"
+##name="disabled" type="java.lang.String" required="false" description="是否限制选择，如果限制，设置为disabled"
+##name="dataMsgRequired" type="java.lang.String" required="false" description=""
+#macro (sysTreeSelect $id $name $value $labelName $labelValue $title $url $checked $extId $isAll $notAllowSelectRoot $notAllowSelectParent $module $selectScopeModule $allowClear $allowInput $cssClass $cssStyle $smallBtn $hideBtn $disabled $dataMsgRequired)
+<div class="input-append">
+    <input id="${id}Id" name="${name}" class="${cssClass}" type="hidden" value="${value}"/>
+    <input id="${id}Name" name="${labelName}" #if(!${allowInput})"readonly="readonly"#end type="text" value="$!{labelValue}" data-msg-required="${dataMsgRequired}" class="${cssClass}" style="${cssStyle}"/>
+    <a id="${id}Button" href="javascript:" #if(!${hideBtn}) class="btn ${disabled} hide" #else class="btn ${disabled}"#end #if(${smallBtn}) style="padding:4px 2px;"#end>&nbsp;<i class="icon-search"></i>&nbsp;</a>&nbsp;&nbsp;
+</div>
+<script type="text/javascript">
+    $("#${id}Button, #${id}Name").click(function(){
+        // 是否限制选择，如果限制，设置为disabled
+        if ($("#${id}Button").hasClass("disabled")){
+            return true;
+        }
+        // 正常打开
+        top.$.jBox.open("iframe:${ctx}/tag/treeselect?url="+encodeURIComponent("${url}")+"&module=${module}&checked=${checked}&extId=${extId}&isAll=${isAll}", "选择${title}", 300, 420, {
+            ajaxData:{
+                selectIds: $("#${id}Id").val()
+            },
+            buttons:{"确定":"ok",#if(${allowClear})"清除":"clear", #end "关闭":true},
+            submit:function(v, h, f){
+                if (v=="ok"){
+                    var tree = h.find("iframe")[0].contentWindow.tree;//h.find("iframe").contents();
+                    var ids = [], names = [], nodes = [];
+                    if ("${checked}" == "true"){
+                        nodes = tree.getCheckedNodes(true);
+                    }else{
+                        nodes = tree.getSelectedNodes();
+                    }
+                    for(var i=0; i<nodes.length; i++) {//#if(${checked} && ${notAllowSelectRoot})
+                        if (nodes[i].isParent){
+                            continue; // 如果为复选框选择，则过滤掉父节点
+                        }//#end #if(${notAllowSelectRoot})
+                        if (nodes[i].level == 0){
+                            top.$.jBox.tip("不能选择根节点（"+nodes[i].name+"）请重新选择。");
+                            return false;
+                        }//#end #if(${notAllowSelectRoot})
+                        if (nodes[i].isParent){
+                            top.$.jBox.tip("不能选择父节点（"+nodes[i].name+"）请重新选择。");
+                            return false;
+                        }//#end #if(!${module} && ${selectScopeModule})
+                        if (nodes[i].module == ""){
+                            top.$.jBox.tip("不能选择公共模型（"+nodes[i].name+"）请重新选择。");
+                            return false;
+                        }else if (nodes[i].module != "${module}"){
+                            top.$.jBox.tip("不能选择当前栏目以外的栏目模型，请重新选择。");
+                            return false;
+                        }//#end
+                        ids.push(nodes[i].id);
+                        names.push(nodes[i].name);//#if(!${checked})
+                        break; // 如果为非复选框选择，则返回第一个选择  #end
+                    }
+                    $("#${id}Id").val(ids.join(",").replace(/u_/ig,""));
+                    $("#${id}Name").val(names.join(","));
+                }//#if(!${allowClear})
+                else if (v=="clear"){
+                    $("#${id}Id").val("");
+                    $("#${id}Name").val("");
+                }//#end
+                if(typeof ${id}TreeselectCallBack == 'function'){
+                        ${id}TreeselectCallBack(v, h, f);
+                }
+            }, loaded:function(h){
+                $(".jbox-content", top.document).css("overflow-y","hidden");
+            }
+        });
+    });
+</script>
+#end
+
+
+
+
+##name="id" type="java.lang.String" required="true"
+##name="name" type="java.lang.String" required="true"
+##name="value" type="java.lang.String" required="true"
+##name="callback" type="java.lang.String" required="true"
+##使用方法： 1.将本tag写在查询的from里；2.在需要排序th列class上添加：sort-column + 排序字段名；3.后台sql添加排序引用page.orderBy；实例文件：userList.jsp、UserDao.xml
+#macro (sysTableSort $id $name $value $callback)
+    <input id="${id}" name="${name}" type="hidden" value="${value}"/>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var orderBy = $("#${id}").val().split(" ");
+            $(".sort-column").each(function(){
+                if ($(this).hasClass(orderBy[0])){
+                    orderBy[1] = orderBy[1]&&orderBy[1].toUpperCase()=="DESC"?"down":"up";
+                    $(this).html($(this).html()+" <i class=\"icon icon-arrow-"+orderBy[1]+"\"></i>");
+                }
+            });
+            $(".sort-column").click(function(){
+                var order = $(this).attr("class").split(" ");
+                var sort = $("#${id}").val().split(" ");
+                for(var i=0; i<order.length; i++){
+                    if (order[i] == "sort-column"){order = order[i+1]; break;}
+                }
+                if (order == sort[0]){
+                    sort = (sort[1]&&sort[1].toUpperCase()=="DESC"?"ASC":"DESC");
+                    $("#${id}").val(order+" DESC"!=order+" "+sort?"":order+" "+sort);
+                }else{
+                    $("#${id}").val(order+" ASC");
+                }
+                ${callback}
+            });
+        });
+    </script>
+#end
