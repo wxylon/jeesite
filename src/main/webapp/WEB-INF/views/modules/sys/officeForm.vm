@@ -29,7 +29,7 @@
 		</a>
 	</li>
 </ul><br/>
-<form id="inputForm" modelAttribute="office" action="${ctx}/sys/office/save" method="post" class="form-horizontal">
+<form id="inputForm" class="form-horizontal" action="${ctx}/sys/office/save" method="post">
     <input id="id" name="id" type="hidden" value="$!{office.id}"/>
 	#sysMessage($!{message})
 	<div class="control-group">
