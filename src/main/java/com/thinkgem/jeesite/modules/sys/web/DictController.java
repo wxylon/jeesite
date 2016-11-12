@@ -13,6 +13,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,11 +52,12 @@ public class DictController extends BaseController {
 	
 	@RequiresPermissions("sys:dict:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Dict dict, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(Dict dict, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		List<String> typeList = dictService.findTypeList();
-		model.addAttribute("typeList", typeList);
+		model.put("typeList", typeList);
+		model.put("dict", dict);
         Page<Dict> page = dictService.findPage(new Page<Dict>(request, response), dict); 
-        model.addAttribute("page", page);
+        model.put("page", page);
 		return "modules/sys/dictList";
 	}
 
