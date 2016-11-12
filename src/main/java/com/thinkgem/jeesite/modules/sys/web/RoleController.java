@@ -260,8 +260,8 @@ public class RoleController extends BaseController {
 
 	/**
 	 * 验证角色英文名是否有效
-	 * @param oldName
-	 * @param name
+	 * @param oldEnname
+	 * @param enname
 	 * @return
 	 */
 	@RequiresPermissions("user")
