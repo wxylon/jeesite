@@ -10,7 +10,7 @@
 	function addRow(list, tpl, data, pid, root){
 		for (var i=0; i<data.length; i++){
 			var row = data[i];
-			if ($jeeSiteUtils.jsGetVal('row.parentId') == pid){
+			if ($stringUtils.jsGetVal('row.parentId') == pid){
 				$(list).append(Mustache.render(tpl, {
 					dict: {
 						type: getDictLabel($jsonMapper.toJsonString($dictUtils.getDictList('sys_area_type')), row.type)

@@ -360,6 +360,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			target = source;
 		}
 	}
+
+	public static String escapeHtml(String html){
+		if(isEmpty(html)){
+			return "";
+		}
+		return Encodes.escapeHtml(html);
+	}
  
     /**
      * 转换为JS获取对象值，生成三目运算返回结果
