@@ -132,78 +132,79 @@
 ##name="labelValue" type="java.lang.String" required="true" description="输入框值（Name）"
 ##name="title" type="java.lang.String" required="true" description="选择框标题"
 ##name="url" type="java.lang.String" required="true" description="树结构数据地址"
-##name="checked" type="java.lang.Boolean" required="false" description="是否显示复选框，如果不需要返回父节点，请设置notAllowSelectParent为true"
 ##name="extId" type="java.lang.String" required="false" description="排除掉的编号（不能选择的编号）"
-##name="isAll" type="java.lang.Boolean" required="false" description="是否列出全部数据，设置true则不进行数据权限过滤（目前仅对Office有效）"
 ##name="notAllowSelectRoot" type="java.lang.Boolean" required="false" description="不允许选择根节点"
 ##name="notAllowSelectParent" type="java.lang.Boolean" required="false" description="不允许选择父节点"
-##name="module" type="java.lang.String" required="false" description="过滤栏目模型（只显示指定模型，仅针对CMS的Category树）"
-##name="selectScopeModule" type="java.lang.Boolean" required="false" description="选择范围内的模型（控制不能选择公共模型，不能选择本栏目外的模型）（仅针对CMS的Category树）"
 ##name="allowClear" type="java.lang.Boolean" required="false" description="是否允许清除"
-##name="allowInput" type="java.lang.Boolean" required="false" description="文本框可填写"
 ##name="cssClass" type="java.lang.String" required="false" description="css样式"
 ##name="cssStyle" type="java.lang.String" required="false" description="css样式"
+#macro (sysTreeSelect $id $name $value $labelName $labelValue $title $url $extId $notAllowSelectRoot $notAllowSelectParent $allowClear $cssClass $cssStyle)
+
+##name="allowInput" type="java.lang.Boolean" required="false" description="文本框可填写"
 ##name="smallBtn" type="java.lang.Boolean" required="false" description="缩小按钮显示"
 ##name="hideBtn" type="java.lang.Boolean" required="false" description="是否显示按钮"
 ##name="disabled" type="java.lang.String" required="false" description="是否限制选择，如果限制，设置为disabled"
 ##name="dataMsgRequired" type="java.lang.String" required="false" description=""
-#macro (sysTreeSelect $id $name $value $labelName $labelValue $title $url $checked $extId $isAll $notAllowSelectRoot $notAllowSelectParent $module $selectScopeModule $allowClear $allowInput $cssClass $cssStyle $smallBtn $hideBtn $disabled $dataMsgRequired)
+##name="checked" type="java.lang.Boolean" required="false" description="是否显示复选框，如果不需要返回父节点，请设置notAllowSelectParent为true"
+##name="isAll" type="java.lang.Boolean" required="false" description="是否列出全部数据，设置true则不进行数据权限过滤（目前仅对Office有效）"
+#set($isAll='')
+#set($checked='')
+#set($allowInput=false)
+#set($smallBtn=false)
+#set($hideBtn=true)
+#set($disabled='')
+#set($dataMsgRequired='')
+
 <div class="input-append">
-    <input id="${id}Id" name="${name}" class="${cssClass}" type="hidden" value="${value}"/>
-    <input id="${id}Name" name="${labelName}" #if(!${allowInput})"readonly="readonly"#end type="text" value="$!{labelValue}" data-msg-required="${dataMsgRequired}" class="${cssClass}" style="${cssStyle}"/>
-    <a id="${id}Button" href="javascript:" #if(!${hideBtn}) class="btn ${disabled} hide" #else class="btn ${disabled}"#end #if(${smallBtn}) style="padding:4px 2px;"#end>&nbsp;<i class="icon-search"></i>&nbsp;</a>&nbsp;&nbsp;
+    <input id="$!{id}Id" name="$!{name}" class="$!{cssClass}" type="hidden" value="$!{value}"/>
+    <input id="$!{id}Name" name="$!{labelName}" #if(!${allowInput} && ${allowInput})#else readonly="readonly" #end type="text" value="$!{labelValue}" data-msg-required="$!{dataMsgRequired}" class="$!{cssClass}" style="$!{cssStyle}"/>
+    <a id="$!{id}Button" href="javascript:" #if(!${hideBtn} && ${hideBtn}) class="btn $!{disabled} hide" #else class="btn $!{disabled}"#end #if(!${smallBtn} && ${smallBtn}) style="padding:4px 2px;"#end>&nbsp;<i class="icon-search"></i>&nbsp;</a>&nbsp;&nbsp;
 </div>
 <script type="text/javascript">
-    $("#${id}Button, #${id}Name").click(function(){
+    $("#$!{id}Button, #$!{id}Name").click(function(){
         // 是否限制选择，如果限制，设置为disabled
-        if ($("#${id}Button").hasClass("disabled")){
+        if ($("#$!{id}Button").hasClass("disabled")){
             return true;
         }
         // 正常打开
-        top.$.jBox.open("iframe:${ctx}/tag/treeselect?url="+encodeURIComponent("${url}")+"&module=${module}&checked=${checked}&extId=${extId}&isAll=${isAll}", "选择${title}", 300, 420, {
+        top.$.jBox.open("iframe:${ctx}/tag/treeselect?url="+encodeURIComponent("$!{url}")+"&checked=$!{checked}&extId=$!{extId}&isAll=$!{isAll}", "选择$!{title}", 300, 420, {
             ajaxData:{
-                selectIds: $("#${id}Id").val()
+                selectIds: $("#$!{id}Id").val()
             },
-            buttons:{"确定":"ok",#if(${allowClear})"清除":"clear", #end "关闭":true},
+            buttons:{"确定":"ok",#if(!${allowClear} && ${allowClear})"清除":"clear", #end "关闭":true},
             submit:function(v, h, f){
                 if (v=="ok"){
-                    var tree = h.find("iframe")[0].contentWindow.tree;//h.find("iframe").contents();
+                    var tree = h.find("iframe")[0].contentWindow.tree;
                     var ids = [], names = [], nodes = [];
-                    if ("${checked}" == "true"){
+                    if ("$!{checked}" == "true"){
                         nodes = tree.getCheckedNodes(true);
                     }else{
                         nodes = tree.getSelectedNodes();
                     }
-                    for(var i=0; i<nodes.length; i++) {//#if(${checked} && ${notAllowSelectRoot})
+                    for(var i=0; i<nodes.length; i++) {#if(!${checked} && ${checked} && !${notAllowSelectRoot} && ${notAllowSelectRoot})
                         if (nodes[i].isParent){
                             continue; // 如果为复选框选择，则过滤掉父节点
-                        }//#end #if(${notAllowSelectRoot})
+                        }#end #if(!${notAllowSelectRoot} && ${notAllowSelectRoot})
                         if (nodes[i].level == 0){
                             top.$.jBox.tip("不能选择根节点（"+nodes[i].name+"）请重新选择。");
                             return false;
-                        }//#end #if(${notAllowSelectRoot})
+                        }#end #if(!${notAllowSelectParent} && ${notAllowSelectParent})
                         if (nodes[i].isParent){
                             top.$.jBox.tip("不能选择父节点（"+nodes[i].name+"）请重新选择。");
                             return false;
-                        }//#end #if(!${module} && ${selectScopeModule})
-                        if (nodes[i].module == ""){
-                            top.$.jBox.tip("不能选择公共模型（"+nodes[i].name+"）请重新选择。");
-                            return false;
-                        }else if (nodes[i].module != "${module}"){
-                            top.$.jBox.tip("不能选择当前栏目以外的栏目模型，请重新选择。");
-                            return false;
-                        }//#end
+                        }#end
                         ids.push(nodes[i].id);
-                        names.push(nodes[i].name);//#if(!${checked})
-                        break; // 如果为非复选框选择，则返回第一个选择  #end
+                        names.push(nodes[i].name);//#if(!${checked} && ${checked})
+                        break;
+                        #end // 如果为非复选框选择，则返回第一个选择
                     }
                     $("#${id}Id").val(ids.join(",").replace(/u_/ig,""));
                     $("#${id}Name").val(names.join(","));
-                }//#if(!${allowClear})
+                }#if(!${allowClear})
                 else if (v=="clear"){
                     $("#${id}Id").val("");
                     $("#${id}Name").val("");
-                }//#end
+                }#end
                 if(typeof ${id}TreeselectCallBack == 'function'){
                         ${id}TreeselectCallBack(v, h, f);
                 }

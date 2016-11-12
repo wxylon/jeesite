@@ -102,19 +102,19 @@
 				$(this).click();
 			}
 		});
-		// 获取通知数目
-		function getNotifyNum(){
-			$.get("${ctx}/oa/oaNotify/self/count?updateSession=0&t="+new Date().getTime(),function(data){
-				var num = parseFloat(data);
-				if (num > 0){
-					$("#notifyNum,#notifyNum2").show().html("("+num+")");
-				}else{
-					$("#notifyNum,#notifyNum2").hide()
-				}
-			});
-		}
-		getNotifyNum();
-		setInterval(getNotifyNum, 60000);
+##		// 获取通知数目
+##		function getNotifyNum(){
+##			$.get("${ctx}/oa/oaNotify/self/count?updateSession=0&t="+new Date().getTime(),function(data){
+##				var num = parseFloat(data);
+##				if (num > 0){
+##					$("#notifyNum,#notifyNum2").show().html("("+num+")");
+##				}else{
+##					$("#notifyNum,#notifyNum2").hide()
+##				}
+##			});
+##		}
+##		getNotifyNum();
+##		setInterval(getNotifyNum, 60000);
 	});
 </script>
 	<div id="main">

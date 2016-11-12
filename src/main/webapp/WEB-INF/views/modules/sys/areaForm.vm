@@ -34,7 +34,8 @@
 	<div class="control-group">
 		<label class="control-label">上级区域:</label>
 		<div class="controls">
-			#sysTreeSelect('area', 'parent.id',$!{area.parent.id}, 'parent.name', $!{area.parent.name}, '区域', '/sys/area/treeData', false, '$!{area.id}', false, false, true, '', false, true, false, '', '', false, false, false, '')
+			## <sys:treeselect id="area" name="parent.id" value="${area.parent.id}" labelName="parent.name" labelValue="${area.parent.name}" title="区域" url="/sys/area/treeData" extId="${area.id}" cssClass="" allowClear="true"/>
+			#sysTreeSelect('area', 'parent.id', $!{area.parent.id}, 'parent.name', $!{area.parent.name}, '区域', '/sys/area/treeData', '${area.id}', '', '', true, '', '')
 		</div>
 	</div>
 	<div class="control-group">

@@ -20,9 +20,12 @@
 						//tree.selectNode(nodes[i], false);
 					}
 					selectCheckNode();
-				},onDblClick: function(){//<c:if test="${!checked}"> #if(!${checked})
-					top.$.jBox.getBox().find("button[value='ok']").trigger("click");
-					//$("input[type='text']", top.mainFrame.document).focus();//#end
+				},onDblClick: function(){//
+					#if(!${checked} && ${checked})
+					#else
+						top.$.jBox.getBox().find("button[value='ok']").trigger("click");
+					#end
+					//$("input[type='text']", top.mainFrame.document).focus();//
 				}
 			}
 		};
@@ -36,7 +39,7 @@
 		}
 	}
 	$(document).ready(function(){
-		$.get("${ctx}${url}#if($stringUtils.indexOf(${url},'?')>0)'&'#else'?'#end&extId=${extId}&isAll=${isAll}&module=${module}&t="
+		$.get("${ctx}${url}#if($stringUtils.indexOf(${url},'?')>0)&#else'?'#end&extId=$!{extId}&isAll=$!{isAll}&module=$!{module}&t="
 				+ new Date().getTime(), function(zNodes){
 			// 初始化树结构
 			tree = $.fn.zTree.init($("#tree"), setting, zNodes);
@@ -61,7 +64,7 @@
 
 	// 默认选择节点
 	function selectCheckNode(){
-		var ids = "${selectIds}".split(",");
+		var ids = "$!{selectIds}".split(",");
 		for(var i=0; i<ids.length; i++) {
 			var node = tree.getNodeByParam("id", (type==3?"u_":"")+ids[i]);
 			if("${checked}" == "true"){
@@ -90,10 +93,7 @@
 		var value = $.trim(key.get(0).value);
 
 		// 按名字查询
-		var keyType = "name";<%--
-		if (key.hasClass("empty")) {
-			value = "";
-		}--%>
+		var keyType = "name";
 
 		// 如果和上次一次，就退出不查了。
 		if (lastValue === value) {

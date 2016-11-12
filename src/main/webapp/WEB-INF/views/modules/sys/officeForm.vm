@@ -35,13 +35,15 @@
 	<div class="control-group">
 		<label class="control-label">上级机构:</label>
 		<div class="controls">
-			#sysTreeSelect('office', 'parent.id',$!{office.parent.id}, 'parent.name', $!{office.parent.name}, '机构', '/sys/office/treeData', false, $!{office.id}, false, false, false, '', false, ${office.currentUser.admin}, false, '', '', false, false, false, '')
+##            <sys:treeselect id="office" name="parent.id" value="${office.parent.id}" labelName="parent.name" labelValue="${office.parent.name}" title="机构" url="/sys/office/treeData" extId="${office.id}" cssClass="" allowClear="${office.currentUser.admin}"/>
+			#sysTreeSelect('office', 'parent.id', $!{office.parent.id}, 'parent.name', ${office.parent.name}, '机构', '/sys/office/treeData', '${office.id}', '', '', '${office.currentUser.admin}', '', '')
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">归属区域:</label>
 		<div class="controls">
-			#sysTreeSelect('area', 'area.id',$!{office.area.id}, 'area.name', $!{office.area.name}, '区域', '/sys/area/treeData', false, '', false, false, false, '', false, true, false, 'required', '', false, false, false, '')
+##            <sys:treeselect id="area" name="area.id" value="${office.area.id}" labelName="area.name" labelValue="${office.area.name}" title="区域" url="/sys/area/treeData" cssClass="required"/>
+			#sysTreeSelect("area", "area.id", ${office.area.id}, 'area.name', $!{office.area.name}, '区域', '/sys/area/treeData', '', '', '', '', 'required', '')
 		</div>
 	</div>
 	<div class="control-group">
@@ -91,13 +93,15 @@
 	<div class="control-group">
 		<label class="control-label">主负责人:</label>
 		<div class="controls">
-			#sysTreeSelect('primaryPerson', 'primaryPerson.id',$!{office.primaryPerson.id}, 'office.primaryPerson.name', $!{office.primaryPerson.name}, '用户', '/sys/office/treeData?type=3', false, '', false, false, true, '', false, true, false, '', '', false, false, false, '')
+##            <sys:treeselect id="primaryPerson" name="primaryPerson.id" value="${office.primaryPerson.id}" labelName="office.primaryPerson.name" labelValue="${office.primaryPerson.name}" title="用户" url="/sys/office/treeData?type=3" allowClear="true" notAllowSelectParent="true"/>
+			#sysTreeSelect('primaryPerson', 'primaryPerson.id', $!{office.primaryPerson.id}, 'office.primaryPerson.name', $!{office.primaryPerson.name}, '用户', '/sys/office/treeData?type=3', '', '', true, true, '', '')
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">副负责人:</label>
 		<div class="controls">
-			#sysTreeSelect('deputyPerson', 'deputyPerson.id',$!{office.deputyPerson.id}, 'office.deputyPerson.name', $!{office.deputyPerson.name}, '用户', '/sys/office/treeData?type=3', false, '', false, false, true, '', false, true, false, '', '', false, false, false, '')
+##            <sys:treeselect id="deputyPerson" name="deputyPerson.id" value="${office.deputyPerson.id}" labelName="office.deputyPerson.name" labelValue="${office.deputyPerson.name}" title="用户" url="/sys/office/treeData?type=3" allowClear="true" notAllowSelectParent="true"/>
+			#sysTreeSelect('deputyPerson', 'deputyPerson.id', $!{office.deputyPerson.id}, 'office.deputyPerson.name', $!{office.deputyPerson.name}, '用户', '/sys/office/treeData?type=3', '', '', true, true, '', '')
 		</div>
 	</div>
 	<div class="control-group">

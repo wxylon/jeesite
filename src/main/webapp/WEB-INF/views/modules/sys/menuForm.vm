@@ -34,7 +34,8 @@
 	<div class="control-group">
 		<label class="control-label">上级菜单:</label>
 		<div class="controls">
-			#sysTreeSelect('menu', 'parent.id',$!{menu.parent.id}, 'parent.name', $!{menu.parent.name}, '菜单', '/sys/menu/treeData', false, '$!{menu.id}', false, false, true, '', false, true, false, 'required', '', false, false, false, '')
+##          <sys:treeselect id="menu" name="parent.id" value="${menu.parent.id}" labelName="parent.name" labelValue="${menu.parent.name}" title="菜单" url="/sys/menu/treeData" extId="${menu.id}" cssClass="required"/>
+			#sysTreeSelect('menu', 'parent.id', $!{menu.parent.id}, 'parent.name', $!{menu.parent.name}, '菜单', '/sys/menu/treeData', '$!{menu.id}', '', '', '', 'required', '')
 		</div>
 	</div>
 	<div class="control-group">

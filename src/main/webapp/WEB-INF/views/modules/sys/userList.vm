@@ -41,14 +41,16 @@
 	#sysTableSort('orderBy', 'orderBy', $!{page.orderBy}, 'page();')
 	<ul class="ul-form">
 		<li><label>归属公司：</label>
-            #sysTreeSelect('company', 'company.id',$!{user.company.id}, 'company.name', $!{user.company.name}, '公司', '/sys/office/treeData?type=1', false, '', false, false, false, '', false, true, false, 'input-small', '', false, false, false, '')
+##            <sys:treeselect id="company" name="company.id" value="${user.company.id}" labelName="company.name" labelValue="${user.company.name}" title="公司" url="/sys/office/treeData?type=1" cssClass="input-small" allowClear="true"/>
+			#sysTreeSelect('company', 'company.id', $!{user.company.id}, 'company.name', $!{user.company.name}, '公司', '/sys/office/treeData?type=1', '', '', '', true, 'input-small', '')
 		</li>
 		<li><label>登录名：</label>
             <input id="loginName" name="loginName" class="input-medium" type="text" value="$!{loginName}" maxlength="50"/>
 		</li>
 		<li class="clearfix"></li>
 		<li><label>归属部门：</label>
-			#sysTreeSelect('office', 'office.id',$!{user.office.id}, 'office.name', $!{user.office.name}, '部门', '/sys/office/treeData?type=2', false, '', false, false, true, '', false, true, false, 'input-small', '', false, false, false, '')
+##            <sys:treeselect id="office" name="office.id" value="${user.office.id}" labelName="office.name" labelValue="${user.office.name}" title="部门" url="/sys/office/treeData?type=2" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+			#sysTreeSelect('office', 'office.id', $!{user.office.id}, 'office.name', $!{user.office.name}, '部门', '/sys/office/treeData?type=2', '', '', true, true, 'input-small', '')
 		</li>
 		<li><label>姓&nbsp;&nbsp;&nbsp;名：</label>
             <input id="name" name="name" class="input-medium" type="text" value="$!{name}" maxlength="50"/>
