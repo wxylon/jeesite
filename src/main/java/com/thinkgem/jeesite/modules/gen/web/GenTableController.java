@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,22 +49,22 @@ public class GenTableController extends BaseController {
 	
 	@RequiresPermissions("gen:genTable:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(GenTable genTable, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(GenTable genTable, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (!user.isAdmin()){
 			genTable.setCreateBy(user);
 		}
         Page<GenTable> page = genTableService.find(new Page<GenTable>(request, response), genTable); 
-        model.addAttribute("page", page);
+        model.put("page", page);
 		return "modules/gen/genTableList";
 	}
 
 	@RequiresPermissions("gen:genTable:view")
 	@RequestMapping(value = "form")
-	public String form(GenTable genTable, Model model) {
+	public String form(GenTable genTable, ModelMap model) {
 		// 获取物理表列表
 		List<GenTable> tableList = genTableService.findTableListFormDb(new GenTable());
-		model.addAttribute("tableList", tableList);
+		model.put("tableList", tableList);
 		// 验证表是否存在
 		if (StringUtils.isBlank(genTable.getId()) && !genTableService.checkTableName(genTable.getName())){
 			addMessage(model, "下一步失败！" + genTable.getName() + " 表已经添加！");
@@ -74,14 +74,14 @@ public class GenTableController extends BaseController {
 		else{
 			genTable = genTableService.getTableFormDb(genTable);
 		}
-		model.addAttribute("genTable", genTable);
-		model.addAttribute("config", GenUtils.getConfig());
+		model.put("genTable", genTable);
+		model.put("config", GenUtils.getConfig());
 		return "modules/gen/genTableForm";
 	}
 
 	@RequiresPermissions("gen:genTable:edit")
 	@RequestMapping(value = "save")
-	public String save(GenTable genTable, Model model, RedirectAttributes redirectAttributes) {
+	public String save(GenTable genTable, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, genTable)){
 			return form(genTable, model);
 		}

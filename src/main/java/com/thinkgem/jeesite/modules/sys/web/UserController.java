@@ -13,7 +13,7 @@ import javax.validation.ConstraintViolationException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,43 +61,43 @@ public class UserController extends BaseController {
 
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"index"})
-	public String index(User user, Model model) {
+	public String index(User user, ModelMap model) {
 		return "modules/sys/userIndex";
 	}
 
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(User user, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
-        model.addAttribute("page", page);
+        model.put("page", page);
 		return "modules/sys/userList";
 	}
 	
 	@ResponseBody
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"listData"})
-	public Page<User> listData(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public Page<User> listData(User user, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
 		return page;
 	}
 
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = "form")
-	public String form(User user, Model model) {
+	public String form(User user, ModelMap model) {
 		if (user.getCompany()==null || user.getCompany().getId()==null){
 			user.setCompany(UserUtils.getUser().getCompany());
 		}
 		if (user.getOffice()==null || user.getOffice().getId()==null){
 			user.setOffice(UserUtils.getUser().getOffice());
 		}
-		model.addAttribute("user", user);
-		model.addAttribute("allRoles", systemService.findAllRole());
+		model.put("user", user);
+		model.put("allRoles", systemService.findAllRole());
 		return "modules/sys/userForm";
 	}
 
 	@RequiresPermissions("sys:user:edit")
 	@RequestMapping(value = "save")
-	public String save(User user, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+	public String save(User user, HttpServletRequest request, ModelMap model, RedirectAttributes redirectAttributes) {
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/user/list?repage";
@@ -273,11 +273,11 @@ public class UserController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "info")
-	public String info(User user, HttpServletResponse response, Model model) {
+	public String info(User user, HttpServletResponse response, ModelMap model) {
 		User currentUser = UserUtils.getUser();
 		if (StringUtils.isNotBlank(user.getName())){
 			if(Global.isDemoMode()){
-				model.addAttribute("message", "演示模式，不允许操作！");
+				model.put("message", "演示模式，不允许操作！");
 				return "modules/sys/userInfo";
 			}
 			currentUser.setEmail(user.getEmail());
@@ -286,10 +286,10 @@ public class UserController extends BaseController {
 			currentUser.setRemarks(user.getRemarks());
 			currentUser.setPhoto(user.getPhoto());
 			systemService.updateUserInfo(currentUser);
-			model.addAttribute("message", "保存用户信息成功");
+			model.put("message", "保存用户信息成功");
 		}
-		model.addAttribute("user", currentUser);
-		model.addAttribute("Global", new Global());
+		model.put("user", currentUser);
+		model.put("Global", new Global());
 		return "modules/sys/userInfo";
 	}
 
@@ -313,21 +313,21 @@ public class UserController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "modifyPwd")
-	public String modifyPwd(String oldPassword, String newPassword, Model model) {
+	public String modifyPwd(String oldPassword, String newPassword, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (StringUtils.isNotBlank(oldPassword) && StringUtils.isNotBlank(newPassword)){
 			if(Global.isDemoMode()){
-				model.addAttribute("message", "演示模式，不允许操作！");
+				model.put("message", "演示模式，不允许操作！");
 				return "modules/sys/userModifyPwd";
 			}
 			if (SystemService.validatePassword(oldPassword, user.getPassword())){
 				systemService.updatePasswordById(user.getId(), user.getLoginName(), newPassword);
-				model.addAttribute("message", "修改密码成功");
+				model.put("message", "修改密码成功");
 			}else{
-				model.addAttribute("message", "修改密码失败，旧密码错误");
+				model.put("message", "修改密码失败，旧密码错误");
 			}
 		}
-		model.addAttribute("user", user);
+		model.put("user", user);
 		return "modules/sys/userModifyPwd";
 	}
 	

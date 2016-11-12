@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.thinkgem.jeesite.common.persistence.Page;
@@ -31,9 +31,9 @@ public class LogController extends BaseController {
 	
 	@RequiresPermissions("sys:log:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Log log, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(Log log, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         Page<Log> page = logService.findPage(new Page<Log>(request, response), log); 
-        model.addAttribute("page", page);
+        model.put("page", page);
 		return "modules/sys/logList";
 	}
 

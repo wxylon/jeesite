@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,17 +51,17 @@ public class MenuController extends BaseController {
 
 	@RequiresPermissions("sys:menu:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Model model) {
+	public String list(ModelMap model) {
 		List<Menu> list = Lists.newArrayList();
 		List<Menu> sourcelist = systemService.findAllMenu();
 		Menu.sortList(list, sourcelist, Menu.getRootId(), true);
-        model.addAttribute("list", list);
+        model.put("list", list);
 		return "modules/sys/menuList";
 	}
 
 	@RequiresPermissions("sys:menu:view")
 	@RequestMapping(value = "form")
-	public String form(Menu menu, Model model) {
+	public String form(Menu menu, ModelMap model) {
 		if (menu.getParent()==null||menu.getParent().getId()==null){
 			menu.setParent(new Menu(Menu.getRootId()));
 		}
@@ -76,13 +75,13 @@ public class MenuController extends BaseController {
 				menu.setSort(list.get(list.size()-1).getSort() + 30);
 			}
 		}
-		model.addAttribute("menu", menu);
+		model.put("menu", menu);
 		return "modules/sys/menuForm";
 	}
 	
 	@RequiresPermissions("sys:menu:edit")
 	@RequestMapping(value = "save")
-	public String save(Menu menu, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Menu menu, ModelMap model, RedirectAttributes redirectAttributes) {
 		if(!UserUtils.getUser().isAdmin()){
 			addMessage(redirectAttributes, "越权操作，只有超级管理员才能添加或修改数据！");
 			return "redirect:" + adminPath + "/sys/role/?repage";
@@ -124,8 +123,8 @@ public class MenuController extends BaseController {
 
 	@RequiresPermissions("user")
 	@RequestMapping(value = "treeselect")
-	public String treeselect(String parentId, Model model) {
-		model.addAttribute("parentId", parentId);
+	public String treeselect(String parentId, ModelMap model) {
+		model.put("parentId", parentId);
 		return "modules/sys/menuTreeselect";
 	}
 	

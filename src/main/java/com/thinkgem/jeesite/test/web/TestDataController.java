@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,22 +48,22 @@ public class TestDataController extends BaseController {
 	
 	@RequiresPermissions("test:testData:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(TestData testData, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(TestData testData, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		Page<TestData> page = testDataService.findPage(new Page<TestData>(request, response), testData); 
-		model.addAttribute("page", page);
+		model.put("page", page);
 		return "jeesite/test/testDataList";
 	}
 
 	@RequiresPermissions("test:testData:view")
 	@RequestMapping(value = "form")
-	public String form(TestData testData, Model model) {
-		model.addAttribute("testData", testData);
+	public String form(TestData testData, ModelMap model) {
+		model.put("testData", testData);
 		return "jeesite/test/testDataForm";
 	}
 
 	@RequiresPermissions("test:testData:edit")
 	@RequestMapping(value = "save")
-	public String save(TestData testData, Model model, RedirectAttributes redirectAttributes) {
+	public String save(TestData testData, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, testData)){
 			return form(testData, model);
 		}

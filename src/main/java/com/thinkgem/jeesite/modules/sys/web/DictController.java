@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,14 +62,14 @@ public class DictController extends BaseController {
 
 	@RequiresPermissions("sys:dict:view")
 	@RequestMapping(value = "form")
-	public String form(Dict dict, Model model) {
-		model.addAttribute("dict", dict);
+	public String form(Dict dict, ModelMap model) {
+		model.put("dict", dict);
 		return "modules/sys/dictForm";
 	}
 
 	@RequiresPermissions("sys:dict:edit")
 	@RequestMapping(value = "save")//@Valid 
-	public String save(Dict dict, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Dict dict, ModelMap model, RedirectAttributes redirectAttributes) {
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/dict/?repage&type="+dict.getType();

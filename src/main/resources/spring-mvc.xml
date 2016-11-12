@@ -118,7 +118,6 @@
 		<property name="dateToolAttribute" value="dateTool"/>
 		<property name="requestContextAttribute" value="request"/>
 		<property name="exposeRequestAttributes" value="true"/>
-        <property name="exposeSessionAttributes" value="true"/>
         <property name="toolboxConfigLocation" value="/WEB-INF/classes/toolbox.xml"/>
 		<property name="attributes">
 			<props>

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,27 +58,27 @@ public class RoleController extends BaseController {
 	
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Role role, Model model) {
+	public String list(Role role, ModelMap model) {
 		List<Role> list = systemService.findAllRole();
-		model.addAttribute("list", list);
+		model.put("list", list);
 		return "modules/sys/roleList";
 	}
 
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = "form")
-	public String form(Role role, Model model) {
+	public String form(Role role, ModelMap model) {
 		if (role.getOffice()==null){
 			role.setOffice(UserUtils.getUser().getOffice());
 		}
-		model.addAttribute("role", role);
-		model.addAttribute("menuList", systemService.findAllMenu());
-		model.addAttribute("officeList", officeService.findAll());
+		model.put("role", role);
+		model.put("menuList", systemService.findAllMenu());
+		model.put("officeList", officeService.findAll());
 		return "modules/sys/roleForm";
 	}
 	
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "save")
-	public String save(Role role, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Role role, ModelMap model, RedirectAttributes redirectAttributes) {
 		if(!UserUtils.getUser().isAdmin()&&role.getSysData().equals(Global.YES)){
 			addMessage(redirectAttributes, "越权操作，只有超级管理员才能修改此数据！");
 			return "redirect:" + adminPath + "/sys/role/?repage";
@@ -133,9 +133,9 @@ public class RoleController extends BaseController {
 	 */
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "assign")
-	public String assign(Role role, Model model) {
+	public String assign(Role role, ModelMap model) {
 		List<User> userList = systemService.findUser(new User(new Role(role.getId())));
-		model.addAttribute("userList", userList);
+		model.put("userList", userList);
 		return "modules/sys/roleAssign";
 	}
 	
@@ -147,12 +147,12 @@ public class RoleController extends BaseController {
 	 */
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = "usertorole")
-	public String selectUserToRole(Role role, Model model) {
+	public String selectUserToRole(Role role, ModelMap model) {
 		List<User> userList = systemService.findUser(new User(new Role(role.getId())));
-		model.addAttribute("role", role);
-		model.addAttribute("userList", userList);
-		model.addAttribute("selectIds", Collections3.extractToString(userList, "name", ","));
-		model.addAttribute("officeList", officeService.findAll());
+		model.put("role", role);
+		model.put("userList", userList);
+		model.put("selectIds", Collections3.extractToString(userList, "name", ","));
+		model.put("officeList", officeService.findAll());
 		return "modules/sys/selectUserToRole";
 	}
 	

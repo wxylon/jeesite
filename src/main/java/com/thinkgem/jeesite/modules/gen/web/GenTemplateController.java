@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,26 +46,26 @@ public class GenTemplateController extends BaseController {
 	
 	@RequiresPermissions("gen:genTemplate:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(GenTemplate genTemplate, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(GenTemplate genTemplate, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (!user.isAdmin()){
 			genTemplate.setCreateBy(user);
 		}
         Page<GenTemplate> page = genTemplateService.find(new Page<GenTemplate>(request, response), genTemplate); 
-        model.addAttribute("page", page);
+        model.put("page", page);
 		return "modules/gen/genTemplateList";
 	}
 
 	@RequiresPermissions("gen:genTemplate:view")
 	@RequestMapping(value = "form")
-	public String form(GenTemplate genTemplate, Model model) {
-		model.addAttribute("genTemplate", genTemplate);
+	public String form(GenTemplate genTemplate, ModelMap model) {
+		model.put("genTemplate", genTemplate);
 		return "modules/gen/genTemplateForm";
 	}
 
 	@RequiresPermissions("gen:genTemplate:edit")
 	@RequestMapping(value = "save")
-	public String save(GenTemplate genTemplate, Model model, RedirectAttributes redirectAttributes) {
+	public String save(GenTemplate genTemplate, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, genTemplate)){
 			return form(genTemplate, model);
 		}

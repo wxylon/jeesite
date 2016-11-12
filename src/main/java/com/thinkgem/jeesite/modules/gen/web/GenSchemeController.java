@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,35 +51,35 @@ public class GenSchemeController extends BaseController {
 	
 	@RequiresPermissions("gen:genScheme:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(GenScheme genScheme, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(GenScheme genScheme, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (!user.isAdmin()){
 			genScheme.setCreateBy(user);
 		}
         Page<GenScheme> page = genSchemeService.find(new Page<GenScheme>(request, response), genScheme); 
-        model.addAttribute("page", page);
+        model.put("page", page);
 		
 		return "modules/gen/genSchemeList";
 	}
 
 	@RequiresPermissions("gen:genScheme:view")
 	@RequestMapping(value = "form")
-	public String form(GenScheme genScheme, Model model) {
+	public String form(GenScheme genScheme, ModelMap model) {
 		if (StringUtils.isBlank(genScheme.getPackageName())){
 			genScheme.setPackageName("com.thinkgem.jeesite.modules");
 		}
 //		if (StringUtils.isBlank(genScheme.getFunctionAuthor())){
 //			genScheme.setFunctionAuthor(UserUtils.getUser().getName());
 //		}
-		model.addAttribute("genScheme", genScheme);
-		model.addAttribute("config", GenUtils.getConfig());
-		model.addAttribute("tableList", genTableService.findAll());
+		model.put("genScheme", genScheme);
+		model.put("config", GenUtils.getConfig());
+		model.put("tableList", genTableService.findAll());
 		return "modules/gen/genSchemeForm";
 	}
 
 	@RequiresPermissions("gen:genScheme:edit")
 	@RequestMapping(value = "save")
-	public String save(GenScheme genScheme, Model model, RedirectAttributes redirectAttributes) {
+	public String save(GenScheme genScheme, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, genScheme)){
 			return form(genScheme, model);
 		}

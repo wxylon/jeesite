@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -26,13 +26,13 @@ public class TagController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "treeselect")
-	public String treeselect(HttpServletRequest request, Model model) {
-		model.addAttribute("url", request.getParameter("url")); 	// 树结构数据URL
-		model.addAttribute("extId", request.getParameter("extId")); // 排除的编号ID
-		model.addAttribute("checked", request.getParameter("checked")); // 是否可复选
-		model.addAttribute("selectIds", request.getParameter("selectIds")); // 指定默认选中的ID
-		model.addAttribute("isAll", request.getParameter("isAll")); 	// 是否读取全部数据，不进行权限过滤
-		model.addAttribute("module", request.getParameter("module"));	// 过滤栏目模型（仅针对CMS的Category树）
+	public String treeselect(HttpServletRequest request, ModelMap model) {
+		model.put("url", request.getParameter("url")); 	// 树结构数据URL
+		model.put("extId", request.getParameter("extId")); // 排除的编号ID
+		model.put("checked", request.getParameter("checked")); // 是否可复选
+		model.put("selectIds", request.getParameter("selectIds")); // 指定默认选中的ID
+		model.put("isAll", request.getParameter("isAll")); 	// 是否读取全部数据，不进行权限过滤
+		model.put("module", request.getParameter("module"));	// 过滤栏目模型（仅针对CMS的Category树）
 		return "modules/sys/tagTreeselect";
 	}
 	
@@ -41,8 +41,8 @@ public class TagController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "iconselect")
-	public String iconselect(HttpServletRequest request, Model model) {
-		model.addAttribute("value", request.getParameter("value"));
+	public String iconselect(HttpServletRequest request, ModelMap model) {
+		model.put("value", request.getParameter("value"));
 		return "modules/sys/tagIconselect";
 	}
 	

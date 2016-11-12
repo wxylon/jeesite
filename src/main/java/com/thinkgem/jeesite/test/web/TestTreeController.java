@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,15 +53,15 @@ public class TestTreeController extends BaseController {
 	
 	@RequiresPermissions("test:testTree:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(TestTree testTree, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(TestTree testTree, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		List<TestTree> list = testTreeService.findList(testTree); 
-		model.addAttribute("list", list);
+		model.put("list", list);
 		return "jeesite/test/testTreeList";
 	}
 
 	@RequiresPermissions("test:testTree:view")
 	@RequestMapping(value = "form")
-	public String form(TestTree testTree, Model model) {
+	public String form(TestTree testTree, ModelMap model) {
 		if (testTree.getParent()!=null && StringUtils.isNotBlank(testTree.getParent().getId())){
 			testTree.setParent(testTreeService.get(testTree.getParent().getId()));
 			// 获取排序号，最末节点排序号+30
@@ -80,13 +80,13 @@ public class TestTreeController extends BaseController {
 		if (testTree.getSort() == null){
 			testTree.setSort(30);
 		}
-		model.addAttribute("testTree", testTree);
+		model.put("testTree", testTree);
 		return "jeesite/test/testTreeForm";
 	}
 
 	@RequiresPermissions("test:testTree:edit")
 	@RequestMapping(value = "save")
-	public String save(TestTree testTree, Model model, RedirectAttributes redirectAttributes) {
+	public String save(TestTree testTree, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, testTree)){
 			return form(testTree, model);
 		}

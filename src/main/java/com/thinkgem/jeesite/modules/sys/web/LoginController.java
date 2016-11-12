@@ -13,7 +13,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,7 +46,7 @@ public class LoginController extends BaseController{
 	 * 管理登录
 	 */
 	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.GET)
-	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String login(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		Principal principal = UserUtils.getPrincipal();
 
 //		// 默认页签模式
@@ -81,7 +81,7 @@ public class LoginController extends BaseController{
 	 * 登录失败，真正登录的POST请求由Filter完成
 	 */
 	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.POST)
-	public String loginFail(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String loginFail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		Principal principal = UserUtils.getPrincipal();
 		
 		// 如果已经登录，则跳转到管理首页
@@ -99,11 +99,11 @@ public class LoginController extends BaseController{
 			message = "用户或密码错误, 请重试.";
 		}
 
-		model.addAttribute(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
-		model.addAttribute(FormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
-		model.addAttribute(FormAuthenticationFilter.DEFAULT_MOBILE_PARAM, mobile);
-		model.addAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME, exception);
-		model.addAttribute(FormAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
+		model.put(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
+		model.put(FormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
+		model.put(FormAuthenticationFilter.DEFAULT_MOBILE_PARAM, mobile);
+		model.put(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME, exception);
+		model.put(FormAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
 		
 		if (logger.isDebugEnabled()){
 			logger.debug("login fail, active session size: {}, message: {}, exception: {}", 
@@ -112,7 +112,7 @@ public class LoginController extends BaseController{
 		
 		// 非授权异常，登录失败，验证码加1。
 		if (!UnauthorizedException.class.getName().equals(exception)){
-			model.addAttribute("isValidateCodeLogin", isValidateCodeLogin(username, true, false));
+			model.put("isValidateCodeLogin", isValidateCodeLogin(username, true, false));
 		}
 		
 		// 验证失败清空验证码

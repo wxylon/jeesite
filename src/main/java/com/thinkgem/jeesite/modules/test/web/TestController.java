@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,7 +55,7 @@ public class TestController extends BaseController {
 	 */
 	@RequiresPermissions("test:test:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Test test, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(Test test, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		return "modules/test/testList";
 	}
 	
@@ -70,7 +70,7 @@ public class TestController extends BaseController {
 	@RequiresPermissions("test:test:view")
 	@RequestMapping(value = "listData")
 	@ResponseBody
-	public Page<Test> listData(Test test, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public Page<Test> listData(Test test, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (!user.isAdmin()){
 			test.setCreateBy(user);
@@ -87,8 +87,8 @@ public class TestController extends BaseController {
 	 */
 	@RequiresPermissions("test:test:view")
 	@RequestMapping(value = "form")
-	public String form(Test test, Model model) {
-		model.addAttribute("test", test);
+	public String form(Test test, ModelMap model) {
+		model.put("test", test);
 		return "modules/test/testForm";
 	}
 
@@ -101,7 +101,7 @@ public class TestController extends BaseController {
 	 */
 	@RequiresPermissions("test:test:edit")
 	@RequestMapping(value = "save")
-	public String save(Test test, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Test test, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, test)){
 			return form(test, model);
 		}

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,8 +52,8 @@ public class OfficeController extends BaseController {
 
 	@RequiresPermissions("sys:office:view")
 	@RequestMapping(value = {""})
-	public String index(Office office, Model model) {
-//        model.addAttribute("list", officeService.findAll());
+	public String index(Office office, ModelMap model) {
+//        model.put("list", officeService.findAll());
 		return "modules/sys/officeIndex";
 	}
 
@@ -67,7 +66,7 @@ public class OfficeController extends BaseController {
 	
 	@RequiresPermissions("sys:office:view")
 	@RequestMapping(value = "form")
-	public String form(Office office, Model model) {
+	public String form(Office office, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (office.getParent()==null || office.getParent().getId()==null){
 			office.setParent(user.getOffice());
@@ -89,13 +88,13 @@ public class OfficeController extends BaseController {
 			}
 			office.setCode(office.getParent().getCode() + StringUtils.leftPad(String.valueOf(size > 0 ? size+1 : 1), 3, "0"));
 		}
-		model.addAttribute("office", office);
+		model.put("office", office);
 		return "modules/sys/officeForm";
 	}
 	
 	@RequiresPermissions("sys:office:edit")
 	@RequestMapping(value = "save")
-	public String save(Office office, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Office office, ModelMap model, RedirectAttributes redirectAttributes) {
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/office/";

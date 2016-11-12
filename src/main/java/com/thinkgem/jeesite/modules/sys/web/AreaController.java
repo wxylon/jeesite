@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +57,7 @@ public class AreaController extends BaseController {
 
 	@RequiresPermissions("sys:area:view")
 	@RequestMapping(value = "form")
-	public String form(Area area, Model model) {
+	public String form(Area area, ModelMap model) {
 		if (area.getParent()==null||area.getParent().getId()==null){
 			area.setParent(UserUtils.getUser().getOffice().getArea());
 		}
@@ -76,13 +75,13 @@ public class AreaController extends BaseController {
 //			}
 //			area.setCode(area.getParent().getCode() + StringUtils.leftPad(String.valueOf(size > 0 ? size : 1), 4, "0"));
 //		}
-		model.addAttribute("area", area);
+		model.put("area", area);
 		return "modules/sys/areaForm";
 	}
 	
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "save")
-	public String save(Area area, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Area area, ModelMap model, RedirectAttributes redirectAttributes) {
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/area";
