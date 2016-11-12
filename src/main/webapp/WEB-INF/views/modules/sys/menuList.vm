@@ -1,0 +1,50 @@
+#set($title='菜单管理')
+#parse("/include/treetable.vm")
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#treeTable").treeTable({expandLevel : 3}).show();
+	});
+	function updateSort() {
+		loading('正在提交，请稍等...');
+		$("#listForm").attr("action", "${ctx}/sys/menu/updateSort");
+		$("#listForm").submit();
+	}
+</script>
+<ul class="nav nav-tabs">
+	<li class="active"><a href="${ctx}/sys/menu/">菜单列表</a></li>
+	#if($shiro.hasPermission('sys:menu:edit'))<li><a href="${ctx}/sys/menu/form">菜单添加</a></li>#end
+</ul>
+#sysMessage($!{message})
+<form id="listForm" method="post">
+	<table id="treeTable" class="table table-striped table-bordered table-condensed">
+		<thead><tr><th>名称</th><th>链接</th><th style="text-align:center;">排序</th><th>可见</th><th>权限标识</th>#if($shiro.hasPermission('sys:menu:edit'))<th>操作</th>#end</tr></thead>
+		<tbody>
+		#foreach($menu in ${list})
+			<tr id="$!{menu.id}" #if(${menu.parent.id} != '1') pId="$!{menu.parent.id}" #else pId="0" #end>
+				<td nowrap><i #if(${menu.icon}) class="icon-$!{menu.icon}" #else class="icon- hide" #end></i><a href="${ctx}/sys/menu/form?id=$!{menu.id}">$!{menu.name}</a></td>
+				<td title="$!{menu.href}">$stringUtils.abbr($!{menu.href},30)</td>
+				<td style="text-align:center;">
+					#if($shiro.hasPermission('sys:menu:edit'))
+						<input type="hidden" name="ids" value="$!{menu.id}"/>
+						<input name="sorts" type="text" value="$!{menu.sort}" style="width:50px;margin:0;padding:0;text-align:center;">
+					#end
+					#if($shiro.lacksPermission('sys:menu:edit'))$!{menu.sort}#end
+				</td>
+				<td>#if(${menu.isShow} == '1') 显示 #else 隐藏 #end</td>
+				<td title="$!{menu.permission}">$!stringUtils.abbr($!{menu.permission},30)</td>
+				#if($shiro.hasPermission('sys:menu:edit'))
+					<td nowrap>
+					<a href="${ctx}/sys/menu/form?id=$!{menu.id}">修改</a>
+					<a href="${ctx}/sys/menu/delete?id=$!{menu.id}" onclick="return confirmx('要删除该菜单及所有子菜单项吗？', this.href)">删除</a>
+					<a href="${ctx}/sys/menu/form?parent.id=$!{menu.id}">添加下级菜单</a>
+				</td>#end
+			</tr>
+		#end
+		</tbody>
+	</table>
+	#if($shiro.hasPermission('sys:menu:edit'))
+		<div class="form-actions pagination-left">
+			<input id="btnSubmit" class="btn btn-primary" type="button" value="保存排序" onclick="updateSort();"/>
+		</div>
+	#end
+</form>
