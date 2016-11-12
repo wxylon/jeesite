@@ -22,7 +22,7 @@
 <ul class="nav nav-tabs">
 	<li><a href="${ctx}/sys/dict/">字典列表</a></li>
 	<li class="active">
-		<a href="${ctx}/sys/dict/form?id=${dict.id}">字典
+		<a href="${ctx}/sys/dict/form?id=$!{dict.id}">
 			#if($shiro.hasPermission('sys:dict:edit'))#if($!{dict.id})字典修改#else字典添加#end #end
 			#if($shiro.lacksPermission('sys:dict:edit')) 查看 #end
 		</a>
@@ -58,7 +58,7 @@
 	<div class="control-group">
 		<label class="control-label">排序:</label>
 		<div class="controls">
-            <input id="sort" name="sort" class="required digits" type="text" value="10" value="$!{dict.sort}" maxlength="11"/>
+            <input id="sort" name="sort" class="required digits" type="text" value="$!{dict.sort}" maxlength="11"/>
 		</div>
 	</div>
 	<div class="control-group">

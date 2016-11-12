@@ -45,7 +45,7 @@
 					<a href="${ctx}/sys/dict/form?id=${dict.id}">修改</a>
 					<a href="${ctx}/sys/dict/delete?id=${dict.id}&type=${dict.type}" onclick="return confirmx('确认要删除该字典吗？', this.href)">删除</a>
 					#set($dictSort=$dict.sort+10)
-					<a href="$global.getAdminPath()/sys/dict/form?type=${dict.type}&sort=${dictSort}&description=${dict.description}">添加键值</a>
+					<a href="${ctx}/sys/dict/form?type=${dict.type}&sort=${dictSort}&description=${dict.description}">添加键值</a>
 				</td>
 			#end
 		</tr>
