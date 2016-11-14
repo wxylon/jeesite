@@ -148,14 +148,6 @@ public abstract class BaseEntity<T> implements Serializable {
 		return Global.getInstance();
 	}
 	
-	/**
-	 * 获取数据库名称
-	 */
-	@JsonIgnore
-	public String getDbName(){
-		return Global.getConfig("jdbc.type");
-	}
-	
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {
