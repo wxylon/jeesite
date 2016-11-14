@@ -164,7 +164,7 @@ public class RoleController extends BaseController {
 	 */
 	@RequiresPermissions("sys:role:view")
 	@ResponseBody
-	@RequestMapping(value = "users")
+	@RequestMapping(value = "users", produces = {"application/json"})
 	public List<Map<String, Object>> users(String officeId, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		User user = new User();
@@ -248,7 +248,7 @@ public class RoleController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "checkName")
+	@RequestMapping(value = "checkName", produces = {"application/json"})
 	public String checkName(String oldName, String name) {
 		if (name!=null && name.equals(oldName)) {
 			return "true";
@@ -266,7 +266,7 @@ public class RoleController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "checkEnname")
+	@RequestMapping(value = "checkEnname", produces = {"application/json"})
 	public String checkEnname(String oldEnname, String enname) {
 		if (enname!=null && enname.equals(oldEnname)) {
 			return "true";

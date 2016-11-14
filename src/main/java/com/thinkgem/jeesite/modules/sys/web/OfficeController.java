@@ -149,7 +149,7 @@ public class OfficeController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "treeData")
+	@RequestMapping(value = "treeData", produces = {"application/json"})
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, @RequestParam(required=false) String type,
 			@RequestParam(required=false) Long grade, @RequestParam(required=false) Boolean isAll, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();

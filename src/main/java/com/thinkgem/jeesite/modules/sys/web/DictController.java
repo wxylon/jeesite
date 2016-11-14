@@ -96,7 +96,7 @@ public class DictController extends BaseController {
 	
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "treeData")
+	@RequestMapping(value = "treeData", produces = {"application/json"})
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String type, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		Dict dict = new Dict();
@@ -114,7 +114,7 @@ public class DictController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "listData")
+	@RequestMapping(value = "listData", produces = {"application/json"})
 	public List<Dict> listData(@RequestParam(required=false) String type) {
 		Dict dict = new Dict();
 		dict.setType(type);

@@ -75,7 +75,7 @@ public class UserController extends BaseController {
 	
 	@ResponseBody
 	@RequiresPermissions("sys:user:view")
-	@RequestMapping(value = {"listData"})
+	@RequestMapping(value = {"listData"}, produces = {"application/json"})
 	public Page<User> listData(User user, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
 		return page;
@@ -255,7 +255,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequiresPermissions("sys:user:edit")
-	@RequestMapping(value = "checkLoginName")
+	@RequestMapping(value = "checkLoginName", produces = {"application/json"})
 	public String checkLoginName(String oldLoginName, String loginName) {
 		if (loginName !=null && loginName.equals(oldLoginName)) {
 			return "true";
@@ -299,7 +299,7 @@ public class UserController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "infoData")
+	@RequestMapping(value = "infoData", produces = {"application/json"})
 	public User infoData() {
 		return UserUtils.getUser();
 	}
@@ -333,7 +333,7 @@ public class UserController extends BaseController {
 	
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "treeData")
+	@RequestMapping(value = "treeData", produces = {"application/json"})
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String officeId, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		List<User> list = systemService.findUserByOfficeId(officeId);

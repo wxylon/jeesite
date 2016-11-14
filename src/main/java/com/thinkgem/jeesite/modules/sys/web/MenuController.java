@@ -156,7 +156,7 @@ public class MenuController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "treeData")
+	@RequestMapping(value = "treeData", produces = {"application/json"})
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId,@RequestParam(required=false) String isShowHide, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		List<Menu> list = systemService.findAllMenu();

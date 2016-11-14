@@ -112,7 +112,7 @@ public class AreaController extends BaseController {
 
 	@RequiresPermissions("user")
 	@ResponseBody
-	@RequestMapping(value = "treeData")
+	@RequestMapping(value = "treeData", produces = {"application/json"})
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		List<Area> list = areaService.findAll();
