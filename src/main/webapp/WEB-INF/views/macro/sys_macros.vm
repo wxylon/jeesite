@@ -53,7 +53,7 @@
 #macro (sysCkFinder $input $type $uploadPath $selectMultiple $readonly $maxWidth $maxHeight)
     <ol id="${input}Preview"></ol>
     #if(!$readonly)
-        <a href="javascript:" onclick="${input}FinderOpen();" class="btn">#if($selectMultiple)'添加'#else'选择'#end</a>&nbsp;
+        <a href="javascript:" onclick="${input}FinderOpen();" class="btn">#if($selectMultiple) 添加 #else 选择 #end</a>&nbsp;
         <a href="javascript:" onclick="${input}DelAll();" class="btn">清除</a>
     #end
     <script type="text/javascript">
@@ -79,22 +79,39 @@
             windowOpen(url,"文件管理",1000,700);
             //top.$.jBox("iframe:"+url+"&pwMf=1", {title: "文件管理", width: 1000, height: 500, buttons:{'关闭': true}});
         }
+
         function ${input}SelectAction(fileUrl, data, allFiles){
             var url="", files=ckfinderAPI.getSelectedFiles();
             for(var i=0; i<files.length; i++){
+                #if(${type} == 'thumb')
+                    url += files[i].getThumbnailUrl();
+                #else
+                    url += files[i].getUrl();
+                #end
                 if (i<files.length-1) url+="|";
             }
+            #if(${selectMultiple})
+                $("#${input}").val($("#${input}").val()+($("#${input}").val(url)==""?url:"|"+url));
+            #else
+                $("#${input}").val(url);
+            #end
             ${input}Preview();
-            //top.$.jBox.close();
         }
+
         function ${input}ThumbSelectAction(fileUrl, data, allFiles){
             var url="", files=ckfinderAPI.getSelectedFiles();
             for(var i=0; i<files.length; i++){
                 url += files[i].getThumbnailUrl();
                 if (i<files.length-1) url+="|";
             }
+            #if(${selectMultiple})
+                $("#${input}").val($("#${input}").val()+($("#${input}").val(url)==""?url:"|"+url));
+            #else
+                $("#${input}").val(url);
+            #end
             ${input}Preview();
         }
+
         function ${input}Callback(api){
             ckfinderAPI = api;
         }
@@ -112,7 +129,13 @@
             $("#${input}Preview").children().remove();
             for (var i=0; i<urls.length; i++){
                 if (urls[i]!=""){
-                    li += "&nbsp;&nbsp;#if(!$readonly)<a href=\"javascript:\" onclick=\"${input}Del(this);\">×</a>#end</li>";
+                    #if(${type} == 'thumb' || ${type} == 'images')
+                        li = "<li><img src=\""+urls[i]+"\" url=\""+urls[i]+"\" style=\"#if(!${maxWidth})max-width:${maxWidth}px;#else max-width:200px;#end#if(!${maxHeight})max-height:${maxHeight}px; _height:${maxHeight}px; #else max-height:200px; _height:200px; #end border:0;padding:3px;\">";
+                    #end
+                    #if(${type} != 'thumb' && ${type} != 'images')
+                        li = "<li><a href=\""+urls[i]+"\" url=\""+urls[i]+"\" target=\"_blank\">"+decodeURIComponent(urls[i].substring(urls[i].lastIndexOf("/")+1))+"</a>";
+                    #end
+                    li += "&nbsp;&nbsp;#if(!${readonly})<a href=\"javascript:\" onclick=\"${input}Del(this);\">×</a>#end</li>";
                     $("#${input}Preview").append(li);
                 }
             }
