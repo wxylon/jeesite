@@ -1,5 +1,4 @@
 #set($title='数据选择')
-#parse("/include/treeview.vm")
 <script type="text/javascript">
 	var key, lastValue = "", nodeList = [], type = getQueryString("type", "${url}");
 	var tree, setting = {view:{selectedMulti:false,dblClickExpand:false},check:{enable:"${checked}",nocheckInherit:true},
@@ -167,7 +166,6 @@
 		$("#txt").toggle();
 		$("#key").focus();
 	}
-
 </script>
 <div style="position:absolute;right:8px;top:5px;cursor:pointer;" onclick="search();">
 	<i class="icon-search"></i><label id="txt">搜索</label>

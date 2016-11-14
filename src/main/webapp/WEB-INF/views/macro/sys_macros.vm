@@ -151,14 +151,14 @@
 #set($checked='')
 #set($allowInput=false)
 #set($smallBtn=false)
-#set($hideBtn=true)
+#set($hideBtn=false)
 #set($disabled='')
 #set($dataMsgRequired='')
 
 <div class="input-append">
     <input id="$!{id}Id" name="$!{name}" class="$!{cssClass}" type="hidden" value="$!{value}"/>
-    <input id="$!{id}Name" name="$!{labelName}" #if(!${allowInput} && ${allowInput})#else readonly="readonly" #end type="text" value="$!{labelValue}" data-msg-required="$!{dataMsgRequired}" class="$!{cssClass}" style="$!{cssStyle}"/>
-    <a id="$!{id}Button" href="javascript:" #if(!${hideBtn} && ${hideBtn}) class="btn $!{disabled} hide" #else class="btn $!{disabled}"#end #if(!${smallBtn} && ${smallBtn}) style="padding:4px 2px;"#end>&nbsp;<i class="icon-search"></i>&nbsp;</a>&nbsp;&nbsp;
+    <input id="$!{id}Name" name="$!{labelName}" #if($!{allowInput} != '' && ${allowInput})#else readonly="readonly" #end type="text" value="$!{labelValue}" data-msg-required="$!{dataMsgRequired}" class="$!{cssClass}" style="$!{cssStyle}"/>
+    <a id="$!{id}Button" href="javascript:" #if($!{hideBtn} != '' && ${hideBtn}) class="btn $!{disabled} hide" #else class="btn $!{disabled}"#end #if($!{smallBtn} != '' && ${smallBtn}) style="padding:4px 2px;"#end>&nbsp;<i class="icon-search"></i>&nbsp;</a>&nbsp;&nbsp;
 </div>
 <script type="text/javascript">
     $("#$!{id}Button, #$!{id}Name").click(function(){
@@ -167,11 +167,11 @@
             return true;
         }
         // 正常打开
-        top.$.jBox.open("iframe:${ctx}/tag/treeselect?url="+encodeURIComponent("$!{url}")+"&checked=$!{checked}&extId=$!{extId}&isAll=$!{isAll}", "选择$!{title}", 300, 420, {
+        top.$.jBox.open("iframe:${ctx}/tag/treeselect?url="+encodeURIComponent("$!{url}")+"&module=&&checked=$!{checked}&extId=$!{extId}&isAll=$!{isAll}", "选择$!{title}", 300, 420, {
             ajaxData:{
                 selectIds: $("#$!{id}Id").val()
             },
-            buttons:{"确定":"ok",#if(!${allowClear} && ${allowClear})"清除":"clear", #end "关闭":true},
+            buttons:{"确定":"ok",#if($!{allowClear} != '' && ${allowClear})"清除":"clear", #end "关闭":true},
             submit:function(v, h, f){
                 if (v=="ok"){
                     var tree = h.find("iframe")[0].contentWindow.tree;
@@ -181,26 +181,26 @@
                     }else{
                         nodes = tree.getSelectedNodes();
                     }
-                    for(var i=0; i<nodes.length; i++) {#if(!${checked} && ${checked} && !${notAllowSelectRoot} && ${notAllowSelectRoot})
+                    for(var i=0; i<nodes.length; i++) {#if($!{checked} != '' && ${checked} && $!{notAllowSelectRoot} != '' && ${notAllowSelectRoot})
                         if (nodes[i].isParent){
                             continue; // 如果为复选框选择，则过滤掉父节点
-                        }#end #if(!${notAllowSelectRoot} && ${notAllowSelectRoot})
+                        }#end #if($!{notAllowSelectRoot} != '' && ${notAllowSelectRoot})
                         if (nodes[i].level == 0){
                             top.$.jBox.tip("不能选择根节点（"+nodes[i].name+"）请重新选择。");
                             return false;
-                        }#end #if(!${notAllowSelectParent} && ${notAllowSelectParent})
+                        }#end #if($!{notAllowSelectParent} != '' && ${notAllowSelectParent})
                         if (nodes[i].isParent){
                             top.$.jBox.tip("不能选择父节点（"+nodes[i].name+"）请重新选择。");
                             return false;
                         }#end
                         ids.push(nodes[i].id);
-                        names.push(nodes[i].name);//#if(!${checked} && ${checked})
+                        names.push(nodes[i].name);#if($!{checked} == '' || !${checked})
                         break;
                         #end // 如果为非复选框选择，则返回第一个选择
                     }
                     $("#${id}Id").val(ids.join(",").replace(/u_/ig,""));
                     $("#${id}Name").val(names.join(","));
-                }#if(!${allowClear})
+                }#if($!{allowClear} != '' && ${allowClear})
                 else if (v=="clear"){
                     $("#${id}Id").val("");
                     $("#${id}Name").val("");
