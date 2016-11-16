@@ -99,14 +99,6 @@ public class Global {
 	public static String getUrlSuffix() {
 		return getConfig("urlSuffix");
 	}
-
-	/**
-	 * 在修改系统用户和角色时是否同步到Activiti
-	 */
-	public static Boolean isSynActivitiIndetity() {
-		String dm = getConfig("activiti.isSynActivitiIndetity");
-		return "true".equals(dm) || "1".equals(dm);
-	}
     
 	/**
 	 * 页面获取常量
