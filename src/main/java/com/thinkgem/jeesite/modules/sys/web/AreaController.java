@@ -82,10 +82,6 @@ public class AreaController extends BaseController {
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "save")
 	public String save(Area area, ModelMap model, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/area";
-		}
 		if (!beanValidator(model, area)){
 			return form(area, model);
 		}
@@ -97,10 +93,6 @@ public class AreaController extends BaseController {
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "delete")
 	public String delete(Area area, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/area";
-		}
 //		if (Area.isRoot(id)){
 //			addMessage(redirectAttributes, "删除区域失败, 不允许删除顶级区域或编号为空");
 //		}else{

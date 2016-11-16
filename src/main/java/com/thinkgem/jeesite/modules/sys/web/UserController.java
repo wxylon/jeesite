@@ -98,10 +98,6 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:edit")
 	@RequestMapping(value = "save")
 	public String save(User user, HttpServletRequest request, ModelMap model, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/user/list?repage";
-		}
 		// 修正引用赋值问题，不知道为何，Company和Office引用的一个实例地址，修改了一个，另外一个跟着修改。
 		user.setCompany(new Office(request.getParameter("company.id")));
 		user.setOffice(new Office(request.getParameter("office.id")));
@@ -139,10 +135,6 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:edit")
 	@RequestMapping(value = "delete")
 	public String delete(User user, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/user/list?repage";
-		}
 		if (UserUtils.getUser().getId().equals(user.getId())){
 			addMessage(redirectAttributes, "删除用户失败, 不允许删除当前用户");
 		}else if (User.isAdmin(user.getId())){
@@ -185,10 +177,6 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:edit")
     @RequestMapping(value = "import", method=RequestMethod.POST)
     public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/user/list?repage";
-		}
 		try {
 			int successNum = 0;
 			int failureNum = 0;
@@ -276,10 +264,6 @@ public class UserController extends BaseController {
 	public String info(User user, HttpServletResponse response, ModelMap model) {
 		User currentUser = UserUtils.getUser();
 		if (StringUtils.isNotBlank(user.getName())){
-			if(Global.isDemoMode()){
-				model.put("message", "演示模式，不允许操作！");
-				return "modules/sys/userInfo";
-			}
 			currentUser.setEmail(user.getEmail());
 			currentUser.setPhone(user.getPhone());
 			currentUser.setMobile(user.getMobile());
@@ -316,10 +300,6 @@ public class UserController extends BaseController {
 	public String modifyPwd(String oldPassword, String newPassword, ModelMap model) {
 		User user = UserUtils.getUser();
 		if (StringUtils.isNotBlank(oldPassword) && StringUtils.isNotBlank(newPassword)){
-			if(Global.isDemoMode()){
-				model.put("message", "演示模式，不允许操作！");
-				return "modules/sys/userModifyPwd";
-			}
 			if (SystemService.validatePassword(oldPassword, user.getPassword())){
 				systemService.updatePasswordById(user.getId(), user.getLoginName(), newPassword);
 				model.put("message", "修改密码成功");
